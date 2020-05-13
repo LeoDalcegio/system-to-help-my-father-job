@@ -4,8 +4,8 @@ module.exports = {
     
     /**
      * Buscar todos os clientes
-     * @param  {[Number]} request.body.currentPage página atual
-     * @param  {[Number]} request.body.perPage limite de itens por página
+     * @param  {[Number]} request.body.currentPage Ppágina atual
+     * @param  {[Number]} request.body.perPage Limite de itens por página
      * @return {[JSON]} JSON contendo todos os clientes
      */
     async index(request, response){
@@ -17,6 +17,11 @@ module.exports = {
         return response.json(clientes);
     },
 
+    /**
+     * Buscar um cliente com base no id informado
+     * @param  {[Number]} request.params.id Id do cliente a ser retornado
+     * @return {[JSON]} JSON contendo o cliente
+     */
     async show(request, response){
         const { id } = request.params;
         
@@ -34,8 +39,8 @@ module.exports = {
 
     /**
      * Criar um cliente
-     * @param  {[String]} request.body.nome nome do cliente
-     * @param  {[String]} request.body.observacao observação para o cliente
+     * @param  {[String]} request.body.nome Nome do cliente
+     * @param  {[String]} request.body.observacao Observação para o cliente
      * @return {[JSON]} JSON contendo o cliente criado
      */
     async create(request, response){
@@ -60,7 +65,22 @@ module.exports = {
        
     },
 
+    /**
+     * Deletar um cliente
+     * @param  {[Number]} request.params.id Id do cliente a ser excluído
+     * @return {[StatusCode]} Status code da operação
+     */
     async destroy(request, response){
-        
+        const { id } = request.params;
+
+        try {
+            await connection('cliente')
+                .where('id', id)
+                .delete();
+
+            return response.status(204).send();
+        }catch(err){
+            return response.status(400).send(err);
+        }
     },
 }

@@ -68,6 +68,15 @@ routes.get('/produto/:id', celebrate({
     ProdutoController.show
 );
 
+routes.delete('/produto/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+}),
+    verify,
+    ProdutoController.destroy
+);
+
 routes.post('/cliente', celebrate({
     [Segments.BODY]: Joi.object({
         nome: Joi.string()
@@ -96,6 +105,15 @@ routes.get('/cliente/:id', celebrate({
 }),
     verify,
     ClienteController.show
+);
+
+routes.delete('/cliente/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+}),
+    verify,
+    ClienteController.destroy
 );
 
 module.exports = routes;

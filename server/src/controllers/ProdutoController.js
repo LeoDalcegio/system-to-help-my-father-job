@@ -4,8 +4,8 @@ module.exports = {
     
     /**
      * Buscar todos os produtos
-     * @param  {[Number]} request.body.currentPage página atual
-     * @param  {[Number]} request.body.perPage limite de itens por página
+     * @param  {[Number]} request.body.currentPage Página atual
+     * @param  {[Number]} request.body.perPage Limite de itens por página
      * @return {[JSON]} JSON contendo todos os produtos
      */
     async index(request, response){
@@ -21,6 +21,11 @@ module.exports = {
         }
     },
 
+    /**
+     * Buscar um produto com base no id informado
+     * @param  {[Number]} request.params.id Id do produto a ser retornado
+     * @return {[JSON]} JSON contendo o produto
+     */
     async show(request, response){
         const { id } = request.params;
         
@@ -38,10 +43,10 @@ module.exports = {
 
     /**
      * Criar um produto
-     * @param  {[String]} request.body.codigo_do_produto nome do usuário
-     * @param  {[String]} request.body.descricao_do_produto email do usuário
-     * @param  {[String]} request.body.observacao senha do usuário
-     * @param  {[String]} request.body.tipo senha do usuário
+     * @param  {[String]} request.body.codigo_do_produto Código do produto
+     * @param  {[String]} request.body.descricao_do_produto Descrição do produto
+     * @param  {[String]} request.body.observacao Observação para o produto
+     * @param  {[String]} request.body.tipo Tipo do produto
      * @return {[JSON]} JSON contendo o produto criado
      */
     async create(request, response){
@@ -72,7 +77,22 @@ module.exports = {
        
     },
 
+    /**
+     * Deletar um produto
+     * @param  {[Number]} request.body.nome Id do produto a ser excluído
+     * @return {[StatusCode]} Status code da operação
+     */
     async destroy(request, response){
-        
+        const { id } = request.params;
+
+        try {
+            await connection('produto')
+                .where('id', id)
+                .delete();
+
+            return response.status(204).send();
+        }catch(err){
+            return response.status(400).send(err);
+        }
     },
 }

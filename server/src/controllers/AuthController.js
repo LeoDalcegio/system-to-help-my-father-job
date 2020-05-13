@@ -6,9 +6,9 @@ module.exports = {
     
     /**
      * Registrar um usuário
-     * @param  {[String]} request.body.nome nome do usuário
-     * @param  {[String]} request.body.email email do usuário
-     * @param  {[String]} request.body.senha senha do usuário
+     * @param  {[String]} request.body.nome Nome do usuário
+     * @param  {[String]} request.body.email Email do usuário
+     * @param  {[String]} request.body.senha Senha do usuário
      * @return {[JSON]} JSON contendo o usuário
      */
     async register(request, response){
@@ -42,8 +42,8 @@ module.exports = {
 
     /**
      * Fazer login com um usuário já registrado
-     * @param  {[String]} request.body.email email do usuário
-     * @param  {[String]} request.body.senha senha do usuário
+     * @param  {[String]} request.body.email Email do usuário
+     * @param  {[String]} request.body.senha Senha do usuário
      * @return {[JSON]} JSON contendo o usuário
      */
     async login(request, response) {

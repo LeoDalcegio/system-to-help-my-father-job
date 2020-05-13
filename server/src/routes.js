@@ -149,4 +149,29 @@ routes.delete('/cliente/:id', celebrate({
     ClienteController.destroy
 );
 
+routes.post('/movimentacao', celebrate({
+    [Segments.QUERY]: Joi.object({
+        tipo: Joi.string().required(),
+    }),
+    [Segments.BODY]: Joi.object({
+        numero_da_nota: Joi.number()
+            .required(),
+        tipo: Joi.string()
+            .required(),
+        observacao: Joi.string(),
+        data_da_movimentacao: Joi.date()
+            .required(),
+        quantidade: Joi.number()
+            .required(),
+        produto_id: Joi.number()
+            .required(),
+        cliente_id: Joi.number()
+            .required(),    
+    }),
+}),
+    verify,
+    ClienteController.create
+);
+
+
 module.exports = routes;

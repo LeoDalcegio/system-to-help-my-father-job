@@ -61,7 +61,7 @@ module.exports = {
 
             user.senha = undefined;
             
-            return response.header('authentication', token).send(user);
+            return response.header('x-access-token', token).send(user);
         }catch(err){
             return response.status(401).send(err);
         }

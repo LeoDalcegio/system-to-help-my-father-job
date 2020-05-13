@@ -1,6 +1,9 @@
 const express = require('express');
 const { celebrate, Segments, Joi } = require('celebrate');
-const AuthController = require('./controllers/AuthController')
+const verify = require('./middlewares/verifyToken');
+
+const AuthController = require('./controllers/AuthController');
+const ProdutoController = require('./controllers/ProdutoController');
 
 const routes = express.Router();
 
@@ -25,5 +28,19 @@ routes.post('/login', celebrate({[Segments.BODY]: Joi.object({
     }),}),
     AuthController.login
 );
+
+routes.post('/produto', celebrate({[Segments.BODY]: Joi.object({
+    codigo_do_produto: Joi.string()
+        .required(),
+    descricao_do_produto: Joi.string()  
+        .required(),
+    observacao: Joi.string(),
+    tipo: Joi.string()  
+        .required(),
+    }),}),
+    verify,
+    ProdutoController.create
+);
+
 
 module.exports = routes;

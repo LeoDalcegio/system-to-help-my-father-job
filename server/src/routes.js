@@ -7,6 +7,8 @@ const ProdutoController = require('./controllers/ProdutoController');
 const ClienteController = require('./controllers/ClienteController');
 const MovimentacaoController = require('./controllers/MovimentacaoController');
 
+const RelatorioMovimentacaoController = require('./controllers/reports/RelatorioMovimentacaoController');
+
 const routes = express.Router();
 
 routes.post('/register', celebrate({
@@ -223,5 +225,16 @@ routes.delete('/movimentacao/:id', celebrate({
     verify,
     MovimentacaoController.destroy
 );
+
+routes.get('/movimentacao', celebrate({
+    [Segments.QUERY]: Joi.object({
+        limit: Joi.number(),
+        page: Joi.number(),
+    }),
+}),
+    verify,
+    RelatorioMovimentacaoController.index
+);
+
 
 module.exports = routes;

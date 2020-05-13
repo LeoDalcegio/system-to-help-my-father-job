@@ -30,7 +30,7 @@ module.exports = {
                     'produto.descricao_do_produto'
                 );
 
-            entradas.forEach((entrada) => {
+            entradas.forEach(async (entrada) =>  {
                 // fazer sql em cima da entradas, 
                 // colocar resultado do sql dentro dum array
                 

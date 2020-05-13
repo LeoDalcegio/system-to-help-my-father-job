@@ -19,7 +19,25 @@ module.exports = {
      * @return {[JSON]} JSON contendo a movimentação
      */
     async show(request, response) {
-        
+        const { id } = request.params;
+
+        try {
+            const movimentacao = await connection('movimentacao')
+                .join('cliente', 'cliente.id', '=', 'movimentacao.cliente_id')
+                .join('produto', 'produto.id', '=', 'movimentacao.produto_id')
+                .where('movimentacao.id', id)
+                .first()
+                .select(
+                    'movimentacao.*', 
+                    'cliente.nome', 
+                    'produto.codigo_do_produto', 
+                    'produto.descricao_do_produto'
+                );
+
+            return response.json(movimentacao);
+        } catch (err) {
+            return response.status(400).send(err);
+        }
     },
   
     /**
@@ -34,7 +52,35 @@ module.exports = {
      * @return {[JSON]} JSON contendo a movimentação criada
      */
     async create(request, response) {
-        
+        const { 
+            numero_da_nota, 
+            tipo, 
+            observacao, 
+            data_da_movimentacao, 
+            quantidade, 
+            produto_id, 
+            cliente_id 
+        } = request.body;
+
+        // criar enum para tipo e verificar se ele é válido
+
+        const movimentacao = {
+            numero_da_nota, 
+            tipo, 
+            observacao, 
+            data_da_movimentacao, 
+            quantidade, 
+            produto_id, 
+            cliente_id 
+        };
+
+        try {
+            await connection('movimentacao').insert(movimentacao);
+
+            return response.json(movimentacao);
+        } catch (err) {
+            return response.status(400).send(err);
+        }
     },
 
     /**
@@ -58,6 +104,16 @@ module.exports = {
      * @return {[StatusCode]} Status code da operação
      */
     async destroy(request, response) {
+        const { id } = request.params;
         
+        try {
+            await connection('movimentacao')
+                .where('id', id)
+                .delete();
+
+            return response.status(204).send();
+        } catch (err) {
+            return response.status(400).send(err);
+        }
     },
 }

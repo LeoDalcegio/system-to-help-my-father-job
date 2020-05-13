@@ -12,7 +12,7 @@ module.exports = {
      * @return {[JSON]} JSON contendo o usuário
      */
     async register(request, response){
-        const { email } = request.body;
+        const { nome, email, senha } = request.body;
 
         try { 
             const emailExist = await connection('usuario')
@@ -22,11 +22,11 @@ module.exports = {
         
             if(emailExist) return response.status(409).send({ error: 'Email já existente' });
             
-            const hashPassword = await passwordValidation.encrypt(request.body.senha);
+            const hashPassword = await passwordValidation.encrypt(senha);
             
             const usuario = {
-                nome: request.body.nome,
-                email: request.body.email,
+                nome,
+                email,
                 senha: hashPassword
             };
             
@@ -53,7 +53,7 @@ module.exports = {
             const usuario = await connection('usuario')
                 .where({ email: email })
                 .first()
-                .select();
+                .select("*");
 
             if(!usuario) return response.status(400).send({error: 'Email ou senha incorretos'});
 

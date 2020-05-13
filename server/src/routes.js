@@ -5,6 +5,7 @@ const verify = require('./middlewares/verifyToken');
 const AuthController = require('./controllers/AuthController');
 const ProdutoController = require('./controllers/ProdutoController');
 const ClienteController = require('./controllers/ClienteController');
+const MovimentacaoController = require('./controllers/MovimentacaoController');
 
 const routes = express.Router();
 
@@ -51,8 +52,8 @@ routes.post('/produto', celebrate({
 
 routes.get('/produto', celebrate({
     [Segments.QUERY]: Joi.object({
-        perPage: Joi.number(),
-        currentPage: Joi.number(),
+        limit: Joi.number(),
+        page: Joi.number(),
     }),
 }),
     verify,
@@ -84,7 +85,7 @@ routes.put('/produto/:id', celebrate({
     
 }),
     verify,
-    ProdutoController.create
+    ProdutoController.update
 );
 
 routes.delete('/produto/:id', celebrate({
@@ -109,8 +110,8 @@ routes.post('/cliente', celebrate({
 
 routes.get('/cliente', celebrate({
     [Segments.QUERY]: Joi.object({
-        perPage: Joi.number(),
-        currentPage: Joi.number(),
+        limit: Joi.number(),
+        page: Joi.number(),
     }),
 }),
     verify,
@@ -137,7 +138,7 @@ routes.put('/cliente/:id', celebrate({
     }),
 }),
     verify,
-    ClienteController.create
+    ClienteController.update
 );
 
 routes.delete('/cliente/:id', celebrate({
@@ -150,9 +151,6 @@ routes.delete('/cliente/:id', celebrate({
 );
 
 routes.post('/movimentacao', celebrate({
-    [Segments.QUERY]: Joi.object({
-        tipo: Joi.string().required(),
-    }),
     [Segments.BODY]: Joi.object({
         numero_da_nota: Joi.number()
             .required(),
@@ -173,5 +171,57 @@ routes.post('/movimentacao', celebrate({
     ClienteController.create
 );
 
+routes.get('/movimentacao', celebrate({
+    [Segments.QUERY]: Joi.object({
+        limit: Joi.number(),
+        page: Joi.number(),
+        tipo: Joi.string().required(),
+    }),
+}),
+    verify,
+    MovimentacaoController.index
+);
+
+routes.get('/movimentacao/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+}),
+    verify,
+    MovimentacaoController.show
+);
+
+routes.put('/movimentacao/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+    [Segments.BODY]: Joi.object({
+        numero_da_nota: Joi.number()
+            .required(),
+        tipo: Joi.string()
+            .required(),
+        observacao: Joi.string(),
+        data_da_movimentacao: Joi.date()
+            .required(),
+        quantidade: Joi.number()
+            .required(),
+        produto_id: Joi.number()
+            .required(),
+        cliente_id: Joi.number()
+            .required(),    
+    }),
+}),
+    verify,
+    MovimentacaoController.update
+);
+
+routes.delete('/movimentacao/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+}),
+    verify,
+    MovimentacaoController.destroy
+);
 
 module.exports = routes;

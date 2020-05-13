@@ -14,7 +14,8 @@ module.exports = {
         try {
             const produtos = await knex('produto')
                 .limit(limit)
-                .offset((page - 1) * 5);
+                .offset((page - 1) * 5)
+                .select("*");
 
             return response.json(produtos);
         } catch (err) {
@@ -33,8 +34,8 @@ module.exports = {
         try {
             const produto = await connection('produto')
                 .where('id', id)
-                .select()
                 .first()
+                .select("*");
 
             return response.json(produto);
         } catch (err) {

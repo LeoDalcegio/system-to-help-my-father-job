@@ -13,7 +13,8 @@ module.exports = {
         
         const clientes = await knex('cliente')
                 .limit(limit)
-                .offset((page - 1) * 5);
+                .offset((page - 1) * 5)
+                .select("*");
         
         return response.json(clientes);
     },
@@ -29,8 +30,8 @@ module.exports = {
         try {
             const cliente = await connection('cliente')
                 .where('id', id)
-                .select()
                 .first()
+                .select("*");
 
             return response.json(cliente);
         }catch(err){

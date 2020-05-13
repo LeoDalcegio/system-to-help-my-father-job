@@ -114,7 +114,31 @@ module.exports = {
      * @return {[JSON]} JSON contendo a movimentação atualizada
      */
     async update(request, response) {
+        const { id } = request.params;
+
+        const { numero_da_nota, tipo, observacao, data_da_movimentacao, quantidade, produto_id, cliente_id } = request.body;
         
+        const movimentacao = {
+            numero_da_nota,
+            tipo,
+            observacao,
+            data_da_movimentacao, 
+            quantidade, 
+            produto_id, 
+            cliente_id
+        };
+
+        try {
+            await connection('movimentacao')
+                .where('id', id)
+                .update(
+                    movimentacao
+                );
+
+            return response.json(movimentacao);
+        } catch (err) {
+            return response.status(400).send(err);
+        }
     },
 
     /**

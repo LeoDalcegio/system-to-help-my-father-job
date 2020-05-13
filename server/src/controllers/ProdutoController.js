@@ -4,16 +4,17 @@ module.exports = {
     
     /**
      * Buscar todos os produtos
-     * @param  {[Number]} request.body.currentPage Página atual
-     * @param  {[Number]} request.body.perPage Limite de itens por página
+     * @param  {[Number]} request.body.page Página atual
+     * @param  {[Number]} request.body.limit Limite de itens por página
      * @return {[JSON]} JSON contendo todos os produtos
      */
     async index(request, response){
-        const { currentPage = 1, perPage = 10 } = request.query;
+        const { page = 1, limit = 10 } = request.query;
         
         try {
             const produtos = await knex('produto')
-                .paginate({ perPage, currentPage });
+                .limit(limit)
+                .offset((page - 1) * 5);
         
             return response.json(produtos);
         }catch(err){

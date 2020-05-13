@@ -4,8 +4,8 @@ module.exports = {
     
     /**
      * Buscar todos os clientes
-     * @param  {[Number]} request.body.page Página atual
-     * @param  {[Number]} request.body.limit Limite de itens por página
+     * @param  {[Number]} request.query.page Página atual
+     * @param  {[Number]} request.query.limit Limite de itens por página
      * @return {[JSON]} JSON contendo todos os clientes
      */
     async index(request, response){

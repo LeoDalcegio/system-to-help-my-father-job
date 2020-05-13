@@ -4,9 +4,9 @@ module.exports = {
 
     /**
      * Buscar todas as movimentações filtrando o tipo delas
-     * @param  {[Number]} request.body.page Página atual
-     * @param  {[Number]} request.body.limit Limite de itens por página
-     * @param  {[String]} request.body.tipo "S" = saída, "E" = entrada
+     * @param  {[Number]} request.query.page Página atual
+     * @param  {[Number]} request.query.limit Limite de itens por página
+     * @param  {[String]} request.query.tipo "S" = saída, "E" = entrada
      * @return {[JSON]} JSON contendo todas as movimentações
      */
     async index(request, response) {

@@ -33,8 +33,28 @@ module.exports = {
             entradas.forEach((entrada) => {
                 // fazer sql em cima da entradas, 
                 // colocar resultado do sql dentro dum array
+                
                 // retObject.push(entrada, array)
-            })
+
+                const saidas = await connection('movimentacao')
+                    .join('cliente', 'cliente.id', '=', 'movimentacao.cliente_id')
+                    .join('produto', 'produto.id', '=', 'movimentacao.produto_id')
+                    .where('movimentacao.tipo', "S") // colocar do ENUM
+                    .where('movimentacao.numero_da_nota', entrada.numero_da_nota)
+                    .select(
+                        'movimentacao.*', 
+                        'cliente.nome', 
+                        'produto.codigo_do_produto', 
+                        'produto.descricao_do_produto'
+                    );
+                
+                if(saidas){
+                    retObject.push({
+                        entrada,
+                        saidas: [...saidas]
+                    })
+                }
+            });
 
             return response.json(retObject);
         } catch (err) {

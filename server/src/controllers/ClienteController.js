@@ -62,8 +62,34 @@ module.exports = {
         }
     },
 
+    /**
+     * Atualizar um cliente
+     * @param  {[String]} request.params.id Id do cliente a ser atualizado
+     * @param  {[String]} request.body.nome Nome do cliente
+     * @param  {[String]} request.body.observacao Observação para o cliente
+     * @return {[JSON]} JSON contendo o cliente atualizado
+     */
     async update(request, response){
-       
+        const { id } = request.params;
+
+        const { nome, observacao } = request.body;
+        
+        const cliente = {
+            nome,
+            observacao
+        };
+
+        try {
+            await connection('cliente')
+                .where('id', id)
+                .update(
+                    cliente
+                );
+
+            return response.json(cliente);
+        } catch (err) {
+            return response.status(400).send(err);
+        }
     },
 
     /**

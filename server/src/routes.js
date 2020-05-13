@@ -68,6 +68,25 @@ routes.get('/produto/:id', celebrate({
     ProdutoController.show
 );
 
+routes.put('/produto/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+    [Segments.BODY]: Joi.object({
+        codigo_do_produto: Joi.string()
+            .required(),
+        descricao_do_produto: Joi.string()
+            .required(),
+        observacao: Joi.string(),
+        tipo: Joi.string()
+            .required(),
+    }),
+    
+}),
+    verify,
+    ProdutoController.create
+);
+
 routes.delete('/produto/:id', celebrate({
     [Segments.PARAMS]: Joi.object({
         id: Joi.number().required(),
@@ -105,6 +124,20 @@ routes.get('/cliente/:id', celebrate({
 }),
     verify,
     ClienteController.show
+);
+
+routes.put('/cliente/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+    [Segments.BODY]: Joi.object({
+        nome: Joi.string()
+            .required(),
+        observacao: Joi.string(),
+    }),
+}),
+    verify,
+    ClienteController.create
 );
 
 routes.delete('/cliente/:id', celebrate({

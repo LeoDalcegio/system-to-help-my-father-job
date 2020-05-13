@@ -59,6 +59,15 @@ routes.get('/produto', celebrate({
     ProdutoController.index
 );
 
+routes.get('/produto/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+}),
+    verify,
+    ProdutoController.show
+);
+
 routes.post('/cliente', celebrate({
     [Segments.BODY]: Joi.object({
         nome: Joi.string()
@@ -78,6 +87,15 @@ routes.get('/cliente', celebrate({
 }),
     verify,
     ClienteController.index
+);
+
+routes.get('/cliente/:id', celebrate({
+    [Segments.PARAMS]: Joi.object({
+        id: Joi.number().required(),
+    }),
+}),
+    verify,
+    ClienteController.show
 );
 
 module.exports = routes;

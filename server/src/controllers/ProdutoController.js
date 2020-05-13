@@ -22,7 +22,18 @@ module.exports = {
     },
 
     async show(request, response){
+        const { id } = request.params;
         
+        try {
+            const produto = await connection('produto')
+                .where('id', id)
+                .select()
+                .first()
+
+            return response.json(produto);
+        }catch(err){
+            return response.status(400).send(err);
+        }
     },
 
     /**

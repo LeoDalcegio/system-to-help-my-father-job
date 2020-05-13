@@ -18,7 +18,18 @@ module.exports = {
     },
 
     async show(request, response){
+        const { id } = request.params;
         
+        try {
+            const cliente = await connection('cliente')
+                .where('id', id)
+                .select()
+                .first()
+
+            return response.json(cliente);
+        }catch(err){
+            return response.status(400).send(err);
+        }
     },
 
     /**

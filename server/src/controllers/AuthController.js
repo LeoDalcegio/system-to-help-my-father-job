@@ -15,7 +15,10 @@ module.exports = {
         const { email } = request.body;
 
         try { 
-            const emailExist = await connection('usuario').where({ email: email }).first().select('id');
+            const emailExist = await connection('usuario')
+                .where({ email: email })
+                .first()
+                .select('id');
         
             if(emailExist) return response.status(409).send({ error: 'Email já existente' });
             
@@ -47,7 +50,10 @@ module.exports = {
         const { email } = request.body;
 
         try {
-            const usuario = await connection('usuario').where({ email: email }).first().select();
+            const usuario = await connection('usuario')
+                .where({ email: email })
+                .first()
+                .select();
 
             if(!usuario) return response.status(400).send({error: 'Email ou senha incorretos'});
 

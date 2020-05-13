@@ -21,8 +21,28 @@ module.exports = {
         
     },
 
+    /**
+     * Criar um cliente
+     * @param  {[String]} request.body.nome nome do cliente
+     * @param  {[String]} request.body.observacao observação para o cliente
+     * @return {[JSON]} JSON contendo o cliente criado
+     */
     async create(request, response){
-       
+
+        const { nome, observacao } = request.body;
+
+        const cliente = {
+            nome,
+            observacao,
+        };
+        
+        try {
+            await connection('cliente').insert(cliente);
+
+            return response.json(cliente);
+        }catch(err){
+            return response.status(400).send(err);
+        }
     },
 
     async update(request, response){

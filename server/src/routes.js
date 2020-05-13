@@ -4,6 +4,7 @@ const verify = require('./middlewares/verifyToken');
 
 const AuthController = require('./controllers/AuthController');
 const ProdutoController = require('./controllers/ProdutoController');
+const ClienteController = require('./controllers/ClienteController');
 
 const routes = express.Router();
 
@@ -56,6 +57,27 @@ routes.get('/produto', celebrate({
 }),
     verify,
     ProdutoController.index
+);
+
+routes.post('/cliente', celebrate({
+    [Segments.BODY]: Joi.object({
+        nome: Joi.string()
+            .required(),
+        observacao: Joi.string(),
+    }),
+}),
+    verify,
+    ClienteController.create
+);
+
+routes.get('/cliente', celebrate({
+    [Segments.QUERY]: Joi.object({
+        perPage: Joi.number(),
+        currentPage: Joi.number(),
+    }),
+}),
+    verify,
+    ClienteController.index
 );
 
 module.exports = routes;

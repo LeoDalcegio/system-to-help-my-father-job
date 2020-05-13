@@ -11,10 +11,14 @@ module.exports = {
     async index(request, response){
         const { currentPage = 1, perPage = 10 } = request.query;
         
-        const produtos = await knex('produto')
+        try {
+            const produtos = await knex('produto')
                 .paginate({ perPage, currentPage });
         
-        return response.json(produtos);
+            return response.json(produtos);
+        }catch(err){
+            return response.status(400).send(err);
+        }
     },
 
     async show(request, response){
@@ -44,7 +48,7 @@ module.exports = {
             const productExist = await connection('produto').where({ codigo_do_produto: codigo_do_produto }).first().select('id');
         
             if(productExist) return response.status(409).send({ error: 'Código de Produto já existente' });
-
+            
             await connection('produto').insert(produto);
 
             return response.json(produto);

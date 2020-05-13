@@ -17,10 +17,10 @@ module.exports = {
         }];
                   
         try {
-            const movimentacoes = await connection('movimentacao')
+            const entradas = await connection('movimentacao')
                 .join('cliente', 'cliente.id', '=', 'movimentacao.cliente_id')
                 .join('produto', 'produto.id', '=', 'movimentacao.produto_id')
-                .where('movimentacao.tipo', tipo)
+                .where('movimentacao.tipo', "E") // colocar do ENUM
                 .limit(limit)
                 .offset((page - 1) * 5)
                 .select(
@@ -30,7 +30,13 @@ module.exports = {
                     'produto.descricao_do_produto'
                 );
 
-            return response.json(movimentacoes);
+            entradas.forEach((entrada) => {
+                // fazer sql em cima da entradas, 
+                // colocar resultado do sql dentro dum array
+                // retObject.push(entrada, array)
+            })
+
+            return response.json(retObject);
         } catch (err) {
             return response.status(400).send(err);
         }

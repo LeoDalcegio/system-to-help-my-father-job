@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-    knex.schema.createTable('movimentacao', (table) => {
+    return knex.schema.createTable('movimentacao', function (table) {
         table.increments('id');
         table.integer('numero_da_nota', 50).notNullable();
         table.string('tipo', 1).notNullable();

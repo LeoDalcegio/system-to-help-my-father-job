@@ -7,40 +7,55 @@ const ProdutoController = require('./controllers/ProdutoController');
 
 const routes = express.Router();
 
-routes.post('/register', celebrate({[Segments.BODY]: Joi.object({
-    nome: Joi.string()
-        .required(),
-    email: Joi.string()
-        .required()                 
-        .email(),
-    senha: Joi.string()
-        .required(),
-    }),}), 
+routes.post('/register', celebrate({
+    [Segments.BODY]: Joi.object({
+        nome: Joi.string()
+            .required(),
+        email: Joi.string()
+            .required()
+            .email(),
+        senha: Joi.string()
+            .required(),
+    }),
+}),
     AuthController.register
 );
 
-routes.post('/login', celebrate({[Segments.BODY]: Joi.object({
-    email: Joi.string()
-        .required() 
-        .email(),
-    senha: Joi.string()  
-        .required(),
-    }),}),
+routes.post('/login', celebrate({
+    [Segments.BODY]: Joi.object({
+        email: Joi.string()
+            .required()
+            .email(),
+        senha: Joi.string()
+            .required(),
+    }),
+}),
     AuthController.login
 );
 
-routes.post('/produto', celebrate({[Segments.BODY]: Joi.object({
-    codigo_do_produto: Joi.string()
-        .required(),
-    descricao_do_produto: Joi.string()  
-        .required(),
-    observacao: Joi.string(),
-    tipo: Joi.string()  
-        .required(),
-    }),}),
+routes.post('/produto', celebrate({
+    [Segments.BODY]: Joi.object({
+        codigo_do_produto: Joi.string()
+            .required(),
+        descricao_do_produto: Joi.string()
+            .required(),
+        observacao: Joi.string(),
+        tipo: Joi.string()
+            .required(),
+    }),
+}),
     verify,
     ProdutoController.create
 );
 
+routes.get('/produto', celebrate({
+    [Segments.QUERY]: Joi.object({
+        perPage: Joi.number(),
+        currentPage: Joi.number(),
+    }),
+}),
+    verify,
+    ProdutoController.index
+);
 
 module.exports = routes;

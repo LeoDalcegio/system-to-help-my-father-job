@@ -21,17 +21,17 @@ module.exports = {
             
             const hashPassword = await passwordValidation.encrypt(request.body.senha);
             
-            const user = {
+            const usuario = {
                 nome: request.body.nome,
                 email: request.body.email,
                 senha: hashPassword
             };
             
-            await connection('usuario').insert(user);
+            await connection('usuario').insert(usuario);
 
-            user.senha = undefined;
+            usuario.senha = undefined;
 
-            return response.send(user);
+            return response.send(usuario);
         }catch(err){
             return response.status(400).send(err);
         }
@@ -47,21 +47,21 @@ module.exports = {
         const { email } = request.body;
 
         try {
-            const user = await connection('usuario').where({ email: email }).first().select();
+            const usuario = await connection('usuario').where({ email: email }).first().select();
 
-            if(!user) return response.status(400).send({error: 'Email ou senha incorretos'});
+            if(!usuario) return response.status(400).send({error: 'Email ou senha incorretos'});
 
-            const validPassword = await passwordValidation.comparePasswords(request.body.senha, user.senha);
+            const validPassword = await passwordValidation.comparePasswords(request.body.senha, usuario.senha);
             
             if(!validPassword) return response.status(401).send({error: 'Email ou senha incorretos'});
             
-            const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, {
+            const token = jwt.sign({ id: usuario.id }, process.env.TOKEN_SECRET, {
                 expiresIn: 604800,
             });
 
-            user.senha = undefined;
+            usuario.senha = undefined;
             
-            return response.header('x-access-token', token).send(user);
+            return response.header('x-access-token', token).send(usuario);
         }catch(err){
             return response.status(401).send(err);
         }

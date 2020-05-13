@@ -2,8 +2,19 @@ const connection = require('../database/connection');
 
 module.exports = {
     
+    /**
+     * Buscar todos os produtos
+     * @param  {[Number]} request.body.currentPage página atual
+     * @param  {[Number]} request.body.perPage limite de itens por página
+     * @return {[JSON]} JSON contendo todos os produtos
+     */
     async index(request, response){
-
+        const { currentPage = 1, perPage = 10 } = request.query;
+        
+        const produtos = await knex('produto')
+                .paginate({ perPage, currentPage });
+        
+        return response.json(produtos);
     },
 
     async show(request, response){

@@ -2,10 +2,10 @@
 exports.up = function(knex) {
     return knex.schema.createTable('movimentacao', function (table) {
         table.increments('id');
-        table.integer('numero_da_nota', 50).notNullable();
+        table.integer('numero_da_nota').notNullable();
         table.string('tipo', 1).notNullable();
         table.string('observacao', 600);
-        table.date('data_da_movimentacao', 600).notNullable();
+        table.date('data_da_movimentacao').notNullable();
         table.decimal('quantidade', 600).notNullable();
 
         table.integer('produto_id').notNullable();

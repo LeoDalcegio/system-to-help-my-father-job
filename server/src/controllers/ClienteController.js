@@ -49,13 +49,17 @@ module.exports = {
 
         const { nome, observacao } = request.body;
 
-        const cliente = {
+        let cliente = {
             nome,
             observacao,
         };
         
         try {
-            await connection('cliente').insert(cliente);
+            await connection('cliente')
+                .insert(cliente)
+                .then((id) => {
+                    cliente.id = id[0];
+                });
 
             return response.json(cliente);
         }catch(err){

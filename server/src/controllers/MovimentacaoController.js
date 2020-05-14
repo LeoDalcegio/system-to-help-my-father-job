@@ -83,7 +83,7 @@ module.exports = {
 
         // criar enum para tipo e verificar se ele é válido
 
-        const movimentacao = {
+        let movimentacao = {
             numero_da_nota, 
             tipo, 
             observacao, 
@@ -95,7 +95,10 @@ module.exports = {
 
         try {
             await connection('movimentacao')
-                .insert(movimentacao);
+                .insert(movimentacao)
+                .then((id) => {
+                    movimentacao.id = id[0];
+                });
 
             return response.json(movimentacao);
         } catch (err) {

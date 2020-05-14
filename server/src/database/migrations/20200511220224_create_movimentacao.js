@@ -11,8 +11,12 @@ exports.up = function(knex) {
         table.integer('produto_id').notNullable();
         table.integer('cliente_id').notNullable();
 
-        table.foreign('produto_id').references('id').inTable('produto');
-        table.foreign('cliente_id').references('id').inTable('cliente');
+        table.foreign('produto_id').references('id').inTable('produto')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE');
+        table.foreign('cliente_id').references('id').inTable('cliente')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE');
     });
 };
   

@@ -54,7 +54,7 @@ module.exports = {
     async create(request, response) {
         const { codigo_do_produto, descricao_do_produto, observacao, tipo } = request.body;
 
-        const produto = {
+        let produto = {
             codigo_do_produto,
             descricao_do_produto,
             observacao,
@@ -66,7 +66,11 @@ module.exports = {
             
             if (productExist) return response.status(409).send({ error: 'Código de Produto já existente' });
 
-            await connection('produto').insert(produto);
+            await connection('produto')
+                .insert(produto)
+                .then((id) => {
+                    produto.id = id[0];
+                });
 
             return response.json(produto);
         } catch (err) {

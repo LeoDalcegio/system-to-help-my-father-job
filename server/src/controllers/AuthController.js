@@ -36,7 +36,7 @@ module.exports = {
 
             return response.send(usuario);
         }catch(err){
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -69,7 +69,7 @@ module.exports = {
             
             return response.header('x-access-token', token).send(usuario);
         }catch(err){
-            return response.status(401).send(err);
+            return response.status(401).send({ error: err.message });
         }
     },
 }

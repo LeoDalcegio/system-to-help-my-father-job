@@ -8,8 +8,8 @@ exports.up = function(knex) {
         table.date('data_da_movimentacao', 600).notNullable();
         table.decimal('quantidade', 600).notNullable();
 
-        table.string('produto_id').notNullable();
-        table.string('cliente_id').notNullable();
+        table.integer('produto_id').notNullable();
+        table.integer('cliente_id').notNullable();
 
         table.foreign('produto_id').references('id').inTable('produto');
         table.foreign('cliente_id').references('id').inTable('cliente');

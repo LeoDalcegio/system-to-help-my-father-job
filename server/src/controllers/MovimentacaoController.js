@@ -15,20 +15,20 @@ module.exports = {
         try {
             const movimentacoes = await connection('movimentacao')
                 .join('cliente', 'cliente.id', '=', 'movimentacao.cliente_id')
-                .join('produto', 'produto.id', '=', 'movimentacao.produto_id')
-                .where('movimentacao.tipo', tipo)
-                .limit(limit)
-                .offset((page - 1) * 5)
+                .join('produto', 'produto.id', '=', 'movimentacao.produto_id')                                
                 .select(
                     'movimentacao.*', 
                     'cliente.nome', 
                     'produto.codigo_do_produto', 
                     'produto.descricao_do_produto'
-                );
+                )
+                .where('movimentacao.tipo', tipo)
+                .limit(limit)
+                .offset((page - 1) * 5);
 
             return response.json(movimentacoes);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -42,20 +42,20 @@ module.exports = {
 
         try {
             const movimentacao = await connection('movimentacao')
-                .join('cliente', 'cliente.id', '=', 'movimentacao.cliente_id')
-                .join('produto', 'produto.id', '=', 'movimentacao.produto_id')
-                .where('movimentacao.id', id)
-                .first()
+                .leftJoin('cliente', 'cliente.id', 'movimentacao.cliente_id')
+                .leftJoin('produto', 'produto.id', 'movimentacao.produto_id')                
                 .select(
                     'movimentacao.*', 
                     'cliente.nome', 
                     'produto.codigo_do_produto', 
                     'produto.descricao_do_produto'
-                );
+                )
+                .where('movimentacao.id', id)
+                .first();
 
             return response.json(movimentacao);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
   
@@ -94,11 +94,12 @@ module.exports = {
         };
 
         try {
-            await connection('movimentacao').insert(movimentacao);
+            await connection('movimentacao')
+                .insert(movimentacao);
 
             return response.json(movimentacao);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -137,7 +138,7 @@ module.exports = {
 
             return response.json(movimentacao);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -156,7 +157,7 @@ module.exports = {
 
             return response.status(204).send();
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 }

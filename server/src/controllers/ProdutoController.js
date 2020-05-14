@@ -12,14 +12,14 @@ module.exports = {
         const { page = 1, limit = 10 } = request.query;
 
         try {
-            const produtos = await knex('produto')
+            const produtos = await connection('produto')
                 .limit(limit)
                 .offset((page - 1) * 5)
                 .select("*");
 
             return response.json(produtos);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -39,7 +39,7 @@ module.exports = {
 
             return response.json(produto);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -63,14 +63,14 @@ module.exports = {
 
         try {
             const productExist = await connection('produto').where({ codigo_do_produto: codigo_do_produto }).first().select('id');
-
+            
             if (productExist) return response.status(409).send({ error: 'Código de Produto já existente' });
 
             await connection('produto').insert(produto);
 
             return response.json(produto);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -96,6 +96,10 @@ module.exports = {
         };
 
         try {
+            const productExist = await connection('produto').where({ codigo_do_produto: codigo_do_produto }).select('id');
+            
+            if (productExist.length > 1) return response.status(409).send({ error: 'Código de Produto já existente' });
+
             await connection('produto')
                 .where('id', id)
                 .update(
@@ -123,7 +127,7 @@ module.exports = {
 
             return response.status(204).send();
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 }

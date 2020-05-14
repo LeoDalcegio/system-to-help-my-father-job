@@ -31,11 +31,6 @@ module.exports = {
                 );
 
             entradas.forEach(async (entrada) =>  {
-                // fazer sql em cima da entradas, 
-                // colocar resultado do sql dentro dum array
-                
-                // retObject.push(entrada, array)
-
                 const saidas = await connection('movimentacao')
                     .join('cliente', 'cliente.id', '=', 'movimentacao.cliente_id')
                     .join('produto', 'produto.id', '=', 'movimentacao.produto_id')
@@ -58,7 +53,7 @@ module.exports = {
 
             return response.json(retObject);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 }

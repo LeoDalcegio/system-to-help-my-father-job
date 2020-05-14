@@ -11,7 +11,7 @@ module.exports = {
     async index(request, response){
         const { page = 1, limit = 10 } = request.query;
         
-        const clientes = await knex('cliente')
+        const clientes = await connection('cliente')
                 .limit(limit)
                 .offset((page - 1) * 5)
                 .select("*");
@@ -35,7 +35,7 @@ module.exports = {
 
             return response.json(cliente);
         }catch(err){
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -59,7 +59,7 @@ module.exports = {
 
             return response.json(cliente);
         }catch(err){
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -89,7 +89,7 @@ module.exports = {
 
             return response.json(cliente);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 
@@ -108,7 +108,7 @@ module.exports = {
 
             return response.status(204).send();
         }catch(err){
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 }

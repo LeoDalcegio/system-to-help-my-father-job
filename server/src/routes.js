@@ -170,7 +170,7 @@ routes.post('/movimentacao', celebrate({
     }),
 }),
     verify,
-    ClienteController.create
+    MovimentacaoController.create
 );
 
 routes.get('/movimentacao', celebrate({

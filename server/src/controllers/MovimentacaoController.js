@@ -14,8 +14,8 @@ module.exports = {
         
         try {
             const movimentacoes = await connection('movimentacao')
-                .join('cliente', 'cliente.id', '=', 'movimentacao.cliente_id')
-                .join('produto', 'produto.id', '=', 'movimentacao.produto_id')                                
+                .leftJoin('cliente', 'cliente.id', 'movimentacao.cliente_id')
+                .leftJoin('produto', 'produto.id', 'movimentacao.produto_id')                                 
                 .select(
                     'movimentacao.*', 
                     'cliente.nome', 

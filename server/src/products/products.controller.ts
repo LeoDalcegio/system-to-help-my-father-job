@@ -12,11 +12,7 @@ export class ProductsController {
     async create(@Body() product: ProductEntity): Promise<ProductEntity> {
         let createdProduct: ProductEntity;
 
-        try {
-            createdProduct = await this.productsService.create(product);
-        } catch (err) {
-            return err.message;
-        }
+        createdProduct = await this.productsService.create(product);
 
         return createdProduct;
     }
@@ -32,17 +28,15 @@ export class ProductsController {
     }
 
     @Put(':id')
+    @UseGuards(AuthGuard())  
     async update(@Param('id') id: number, @Body() product: ProductEntity): Promise<any> {
         product.id = Number(id);
         
-        try {
-            return await this.productsService.update(product); 
-        } catch (err) {
-            return err.message;
-        }
+        return await this.productsService.update(product); 
     } 
 
     @Delete(':id')
+    @UseGuards(AuthGuard())  
     async remove(@Param('id') id: number): Promise<any> {
         return await this.productsService.delete(id);
     }

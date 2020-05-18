@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { InventoryMovmentsService } from './inventory-movements.service';
-import { InventoryMovmentsController } from './inventory-movements.controller';
+import { InventoryMovementsController } from './inventory-movements.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InventoryMovmentEntity } from './inventory-movements.entity';
@@ -11,6 +11,6 @@ import { InventoryMovmentEntity } from './inventory-movements.entity';
         AuthModule,
     ],
     providers: [InventoryMovmentsService],
-    controllers: [InventoryMovmentsController]
+    controllers: [InventoryMovementsController]
 })
 export class InventoryMovmentsModule {}

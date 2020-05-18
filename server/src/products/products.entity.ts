@@ -1,11 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity('product')
+@Unique(['product_code'])
 export class ProductEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('varchar', {length: 50, nullable: false})
+    @Column('varchar', {length: 50, nullable: false, })
     product_code: string;
 
     @Column('varchar', {length: 255, nullable: false})

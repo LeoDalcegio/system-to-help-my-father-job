@@ -4,7 +4,7 @@ import { InventoryMovmentsService } from './inventory-movements.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('clients')
-export class InventoryMovementController {
+export class InventoryMovementsController {
     constructor(private inventoryMovmentsService: InventoryMovmentsService) {}
 
     @Post()

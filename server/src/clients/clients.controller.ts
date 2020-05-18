@@ -24,6 +24,7 @@ export class ClientsController {
     }
 
     @Put(':id')
+    @UseGuards(AuthGuard())  
     async update(@Param('id') id: number, @Body() product: ClientEntity): Promise<any> {
         product.id = Number(id);
 
@@ -31,6 +32,7 @@ export class ClientsController {
     } 
 
     @Delete(':id')
+    @UseGuards(AuthGuard())  
     async remove(@Param('id') id: number): Promise<any> {
         return await this.clientsService.delete(id);
     }

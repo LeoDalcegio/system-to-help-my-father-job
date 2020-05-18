@@ -17,6 +17,7 @@ export class AuthService {
             success: true,   
             message: 'Usuário registrado',
         };
+
         try {
             await this.usersService.create(userDto);
         } catch (err) {
@@ -25,6 +26,7 @@ export class AuthService {
                 message: err,
             };    
         }
+
         return status;  
     }
 
@@ -34,13 +36,16 @@ export class AuthService {
         const token = this._createToken(user);
         
         return {
-            username: user.username, ...token,    
+            username: user.username, 
+            ...token,    
         };  
     }
 
     private _createToken({ username }: UserDto): any {
         const user: JwtPayload = { username };    
-        const accessToken = this.jwtService.sign(user);    
+        
+        const accessToken = this.jwtService.sign(user);  
+
         return {
             expiresIn: process.env.EXPIRESIN,
             accessToken,    

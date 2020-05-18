@@ -1,12 +1,14 @@
-import { Controller, Post, Body, Get, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Put, Param, Delete, UseGuards } from '@nestjs/common';
 import { Product } from './product.entity';
 import { ProductsService } from './product.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('products')
 export class ProductsController {
     constructor(private productsService: ProductsService) {}
 
     @Post()
+    @UseGuards(AuthGuard())  
     async create(@Body() product: Product): Promise<Product> {
         return this.productsService.create(product);
     }
@@ -17,8 +19,8 @@ export class ProductsController {
     }
 
     @Get(':id')
-    async getById(@Param('id') id: string): Promise<Product> {
-        return this.productsService.getById(id);
+    async findOne(@Param('id') id: string): Promise<Product> {
+        return this.productsService.findOne(id);
     }
 
     @Put(':id')

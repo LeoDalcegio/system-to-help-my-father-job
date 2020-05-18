@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './user.entity';
+import { UserEntity } from './users.entity';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto/user.dto';
 import { toUserDto } from 'src/shared/mapper';
@@ -9,7 +9,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { comparePasswords } from 'src/shared/utils';
 
 @Injectable()
-export class UserService {
+export class UsersService {
     constructor(
     @InjectRepository(UserEntity)    
     private readonly userRepository: Repository<UserEntity>, ) {}

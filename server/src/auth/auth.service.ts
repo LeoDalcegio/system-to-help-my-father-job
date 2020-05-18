@@ -1,16 +1,16 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
+import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { RegistrationStatus } from './interfaces/regisration-status.interface';
 import { JwtPayload } from './interfaces/payload.interface';
-import { UserDto } from 'src/user/dto/user.dto';
-import { LoginUserDto } from 'src/user/dto/login-user.dto';
+import { UserDto } from 'src/users/dto/user.dto';
+import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { LoginStatus } from './interfaces/login-status.interface';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly userService: UserService, private readonly jwtService: JwtService, ) {}
+    constructor(private readonly usersService: UsersService, private readonly jwtService: JwtService, ) {}
 
     async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
         let status: RegistrationStatus = {
@@ -18,7 +18,7 @@ export class AuthService {
             message: 'Usuário registrado',
         };
         try {
-            await this.userService.create(userDto);
+            await this.usersService.create(userDto);
         } catch (err) {
             status = {
                 success: false,        
@@ -29,7 +29,7 @@ export class AuthService {
     }
 
     async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {    
-        const user = await this.userService.findByLogin(loginUserDto);
+        const user = await this.usersService.findByLogin(loginUserDto);
         
         const token = this._createToken(user);
         
@@ -48,7 +48,7 @@ export class AuthService {
     }
     
     async validateUser(payload: JwtPayload): Promise<UserDto> {
-        const user = await this.userService.findByPayload(payload);    
+        const user = await this.usersService.findByPayload(payload);    
         
         if (!user) {
             throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);    

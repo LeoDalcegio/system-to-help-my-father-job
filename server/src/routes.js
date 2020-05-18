@@ -7,7 +7,7 @@ const ProdutoController = require('./controllers/ProdutoController');
 const ClienteController = require('./controllers/ClienteController');
 const MovimentacaoController = require('./controllers/MovimentacaoController');
 
-const RelatorioMovimentacaoController = require('./controllers/reports/RelatorioMovimentacaoController');
+const ConsultaMovimentacaoController = require('./controllers/ConsultaMovimentacaoController');
 
 const routes = express.Router();
 
@@ -226,14 +226,14 @@ routes.delete('/movimentacao/:id', celebrate({
     MovimentacaoController.destroy
 );
 
-routes.get('/movimentacao', celebrate({
+routes.get('/movimentacao/consulta/saldo', celebrate({
     [Segments.QUERY]: Joi.object({
         limit: Joi.number(),
         page: Joi.number(),
     }),
 }),
     verify,
-    RelatorioMovimentacaoController.index
+    ConsultaMovimentacaoController.balance
 );
 
 

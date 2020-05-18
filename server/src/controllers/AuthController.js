@@ -56,7 +56,7 @@ module.exports = {
                 .select("*");
 
             if(!usuario) return response.status(400).send({error: 'Email ou senha incorretos'});
-
+            
             const validPassword = await passwordValidation.comparePasswords(request.body.senha, usuario.senha);
             
             if(!validPassword) return response.status(401).send({error: 'Email ou senha incorretos'});

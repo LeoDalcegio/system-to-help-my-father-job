@@ -1,4 +1,4 @@
-const connection = require('../../database/connection');
+const connection = require('../database/connection');
 
 module.exports = {
 
@@ -8,7 +8,7 @@ module.exports = {
      * @param  {[Number]} request.query.limit Limite de itens por página
      * @return {[JSON]} JSON contendo todas as movimentações
      */
-    async index(request, response) {
+    async balance(request, response) {
         const { page = 1, limit = 10 } = request.query;
 
         const retObject = [{
@@ -44,10 +44,10 @@ module.exports = {
                     );
                 
                 if(saidas){
-                    retObject.push({
+                    await retObject.push({
                         entrada,
                         saidas: [...saidas]
-                    })
+                    });
                 }
             });
 

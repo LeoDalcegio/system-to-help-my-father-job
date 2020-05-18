@@ -75,13 +75,11 @@ module.exports = {
             numero_da_nota, 
             tipo, 
             observacao, 
-            data_da_movimentacao, 
             quantidade, 
+            data_da_movimentacao,
             produto_id, 
             cliente_id 
         } = request.body;
-
-        // criar enum para tipo e verificar se ele é válido
 
         let movimentacao = {
             numero_da_nota, 

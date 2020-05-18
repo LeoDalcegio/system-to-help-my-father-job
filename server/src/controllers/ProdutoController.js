@@ -1,4 +1,5 @@
 const connection = require('../database/connection');
+const produtoUtils = require('../utils/produtoUtils')
 
 module.exports = {
 
@@ -62,9 +63,9 @@ module.exports = {
         };
 
         try {
-            const productExist = await connection('produto').where({ codigo_do_produto: codigo_do_produto }).first().select('id');
-            
-            if (productExist) return response.status(409).send({ error: 'Código de Produto já existente' });
+            if (await produtoUtils.produtoExiste(codigo_do_produto)) {
+                return response.status(409).send({ error: 'Código de Produto já existente' });
+            }
 
             await connection('produto')
                 .insert(produto)
@@ -100,9 +101,9 @@ module.exports = {
         };
 
         try {
-            const productExist = await connection('produto').where({ codigo_do_produto: codigo_do_produto }).select('id');
-            
-            if (productExist.length > 1) return response.status(409).send({ error: 'Código de Produto já existente' });
+            if (await produtoUtils.produtoExiste(codigo_do_produto)) {
+                return response.status(409).send({ error: 'Código de Produto já existente' });
+            }
 
             await connection('produto')
                 .where('id', id)
@@ -112,7 +113,7 @@ module.exports = {
 
             return response.json(produto);
         } catch (err) {
-            return response.status(400).send(err);
+            return response.status(400).send({ error: err.message });
         }
     },
 

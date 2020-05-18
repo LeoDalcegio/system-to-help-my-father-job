@@ -10,27 +10,40 @@ export class ProductsController {
     @Post()
     @UseGuards(AuthGuard())  
     async create(@Body() product: Product): Promise<Product> {
-        return this.productsService.create(product);
+        let createdProduct: Product;
+
+        try {
+            createdProduct = await this.productsService.create(product);
+        } catch (err) {
+            return err.message;
+        }
+
+        return createdProduct;
     }
 
     @Get()
     async findAll(): Promise<Product[]> {
-        return this.productsService.findAll();
+        return await this.productsService.findAll();
     }
 
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Product> {
-        return this.productsService.findOne(id);
+        return await this.productsService.findOne(id);
     }
 
     @Put(':id')
     async update(@Param('id') id: string, @Body() product: Product): Promise<any> {
         product.id = Number(id);
-        return this.productsService.update(product);    
+        
+        try {
+            return await this.productsService.update(product); 
+        } catch (err) {
+            return err.message;
+        }
     } 
 
     @Delete(':id')
     async remove(@Param('id') id: string): Promise<any> {
-        return this.productsService.delete(id);
+        return await this.productsService.delete(id);
     }
 }

@@ -23,6 +23,11 @@ export class InventoryMovementController {
         return await this.inventoryMovmentsService.findOne(id);
     }
 
+    @Get('balance')
+    async balance(): Promise<InventoryMovmentEntity[]> {
+        return await this.inventoryMovmentsService.balance();
+    }
+
     @Put(':id')
     async update(@Param('id') id: number, @Body() product: InventoryMovmentEntity): Promise<any> {
         product.id = Number(id);

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, ManyToOne } from 'typeorm';
+import { InventoryMovmentEntity } from 'src/inventory-movments/inventory-movements.entity';
 
 @Entity('product')
 @Unique(['product_code'])
@@ -17,4 +18,7 @@ export class ProductEntity {
     
     @Column('varchar', {length: 500, nullable: true})
     observation: string;
+
+    @ManyToOne(() => InventoryMovmentEntity, inventoryMovement => inventoryMovement.product_id)
+    product_id: ProductEntity;
 }

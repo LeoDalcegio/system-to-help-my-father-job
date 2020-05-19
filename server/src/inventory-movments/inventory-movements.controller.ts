@@ -2,8 +2,9 @@ import { Controller, Post, Body, Get, Put, Param, Delete, UseGuards } from '@nes
 import { InventoryMovmentEntity } from './inventory-movements.entity';
 import { InventoryMovmentsService } from './inventory-movements.service';
 import { AuthGuard } from '@nestjs/passport';
+import { InventoryMovementsBalanceDto } from './dto/inventory-movements-balance.dto';
 
-@Controller('clients')
+@Controller('inventory-movements')
 export class InventoryMovementsController {
     constructor(private inventoryMovmentsService: InventoryMovmentsService) {}
 
@@ -18,17 +19,19 @@ export class InventoryMovementsController {
         return await this.inventoryMovmentsService.findAll();
     }
 
+    @Get('balance')
+    @UseGuards(AuthGuard())  
+    async balance(): Promise<InventoryMovementsBalanceDto[]> {
+        return await this.inventoryMovmentsService.balance();
+    }
+
     @Get(':id')
     async findOne(@Param('id') id: number): Promise<InventoryMovmentEntity> {
         return await this.inventoryMovmentsService.findOne(id);
     }
 
-    @Get('balance')
-    async balance(): Promise<InventoryMovmentEntity[]> {
-        return await this.inventoryMovmentsService.balance();
-    }
-
     @Put(':id')
+    @UseGuards(AuthGuard())  
     async update(@Param('id') id: number, @Body() product: InventoryMovmentEntity): Promise<any> {
         product.id = Number(id);
 
@@ -36,6 +39,7 @@ export class InventoryMovementsController {
     } 
 
     @Delete(':id')
+    @UseGuards(AuthGuard())  
     async remove(@Param('id') id: number): Promise<any> {
         return await this.inventoryMovmentsService.delete(id);
     }

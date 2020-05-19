@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { InventoryMovmentEntity } from './inventory-movements.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult } from  'typeorm';
+import { InventoryMovementsBalanceDto } from './dto/inventory-movements-balance.dto';
 
 @Injectable()
 export class InventoryMovmentsService {
@@ -32,7 +33,37 @@ export class InventoryMovmentsService {
         return await this.inventoryRepository.delete(id);
     }
 
-    async balance(): Promise<InventoryMovmentEntity[]> {
-        return null;
+    async balance(): Promise<InventoryMovementsBalanceDto[]> {
+        let retObject: Array<InventoryMovementsBalanceDto>;
+        
+        const entries: InventoryMovmentEntity[] = await this.inventoryRepository.find({
+            where: {
+                type: 'E'
+            }
+        });
+
+        entries.forEach(async (entry: InventoryMovmentEntity) => {
+            const exits: InventoryMovmentEntity[] = await this.inventoryRepository.find({
+                where: {
+                    type: 'S',
+                    client_id: entry.client_id,
+                    note_number: entry.note_number
+                }
+            });
+
+            if(exits){
+                retObject.push({
+                    entry,
+                    exits: [...exits]
+                })
+            }else{
+                retObject.push({
+                    entry,
+                    exits: null
+                })
+            }
+        })
+        console.log(retObject)
+        return retObject;
     }
 }

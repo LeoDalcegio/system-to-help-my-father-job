@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ProductEntity } from 'src/products/products.entity';
 import { ClientEntity } from 'src/clients/clients.entity';
 
@@ -14,16 +14,17 @@ export class InventoryMovmentEntity {
     type: string;
     
     @Column('date', { nullable: false }) 
-    movmentat_date: Date;
+    movement_date: Date;
 
     @Column({ type: 'decimal', precision: 12, scale: 3, default: 0, })
     quantity: number;
 
-    @OneToOne(type => ProductEntity)
-    @JoinColumn()
+    @Column('varchar', {length: 500, nullable: true})
+    observation: string;
+    
+    @OneToMany(() => ProductEntity, product => product.id)
     product_id: ProductEntity;
-
-    @OneToOne(type => ClientEntity)
-    @JoinColumn()
+    
+    @OneToMany(() => ClientEntity, client => client.id)
     client_id: ClientEntity;
 }

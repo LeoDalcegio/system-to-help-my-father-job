@@ -4,6 +4,7 @@ import { InventoryMovmentEntity } from './inventory-movements.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult } from  'typeorm';
 import { InventoryMovementsBalanceDto } from './dto/inventory-movements-balance.dto';
+import { InventoryMovementType } from 'src/shared/enums/inventory-movements.enums';
 
 @Injectable()
 export class InventoryMovmentsService {
@@ -38,14 +39,14 @@ export class InventoryMovmentsService {
         
         const entries: InventoryMovmentEntity[] = await this.inventoryRepository.find({
             where: {
-                type: 'E'
+                type: InventoryMovementType.ENTRY
             }
         });
 
         entries.forEach(async (entry: InventoryMovmentEntity) => {
             const exits: InventoryMovmentEntity[] = await this.inventoryRepository.find({
                 where: {
-                    type: 'S',
+                    type: InventoryMovementType.EXIT,
                     client_id: entry.client_id,
                     note_number: entry.note_number
                 }

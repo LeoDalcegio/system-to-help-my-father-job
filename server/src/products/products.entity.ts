@@ -1,5 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, ManyToOne } from 'typeorm';
 import { InventoryMovmentEntity } from 'src/inventory-movments/inventory-movements.entity';
+import { ProductType } from 'src/shared/enums/products.enums';
+import { IsEnum } from 'class-validator';
 
 @Entity('product')
 @Unique(['product_code'])
@@ -13,8 +15,9 @@ export class ProductEntity {
     @Column('varchar', {length: 255, nullable: false})
     product_description: string;
 
+    @IsEnum(ProductType)
     @Column('character', {length: 1, nullable: false}) // criar enum
-    type: string;
+    type: ProductType;
     
     @Column('varchar', {length: 500, nullable: true})
     observation: string;

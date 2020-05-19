@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ProductEntity } from 'src/products/products.entity';
 import { ClientEntity } from 'src/clients/clients.entity';
+import { InventoryMovementType } from 'src/shared/enums/inventory-movements.enums';
+import { IsEnum } from 'class-validator';
 
 @Entity('inventory_movment')
 export class InventoryMovmentEntity {
@@ -9,9 +11,10 @@ export class InventoryMovmentEntity {
 
     @Column('int', { nullable: false })
     note_number: number;
-
+    
+    @IsEnum(InventoryMovementType)
     @Column('varchar', { length: 1, nullable: false })
-    type: string;
+    type: InventoryMovementType;
     
     @Column('date', { nullable: false }) 
     movement_date: Date;

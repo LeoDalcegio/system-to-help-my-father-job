@@ -1,6 +1,6 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InventoryMovmentEntity } from './inventory-movements.entity';
+import { Injectable } from '@nestjs/common';
+import { Repository, createQueryBuilder } from 'typeorm';
+import { InventoryMovementEntity } from './inventory-movements.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult } from  'typeorm';
 import { InventoryMovementsBalanceDto } from './dto/inventory-movements-balance.dto';
@@ -10,23 +10,28 @@ import { InventoryMovementType } from 'src/shared/enums/inventory-movements.enum
 export class InventoryMovmentsService {
   
     constructor(
-        @InjectRepository(InventoryMovmentEntity) 
-        private inventoryRepository: Repository<InventoryMovmentEntity>
+        @InjectRepository(InventoryMovementEntity) 
+        private inventoryRepository: Repository<InventoryMovementEntity>
     ) { }
     
-    async findAll(): Promise<InventoryMovmentEntity[]> {
-        return await this.inventoryRepository.find();
+    async findAll(page: number = 1): Promise<InventoryMovementEntity[]> {
+            
+        return await this.inventoryRepository.find({      
+            relations: ['product','client'],      
+            take: 15,
+            skip: 15 * (page - 1),           
+        });
     }
 
-    async findOne(id: number): Promise<InventoryMovmentEntity> {
+    async findOne(id: number): Promise<InventoryMovementEntity> {
         return await this.inventoryRepository.findOne(id);
     }
 
-    async create(product: InventoryMovmentEntity): Promise<InventoryMovmentEntity> {
+    async create(product: InventoryMovementEntity): Promise<InventoryMovementEntity> {
         return await this.inventoryRepository.save(product);
     }
 
-    async update(product: InventoryMovmentEntity): Promise<UpdateResult> {
+    async update(product: InventoryMovementEntity): Promise<UpdateResult> {
         return this.inventoryRepository.update(product.id, product);
     }
     
@@ -34,17 +39,21 @@ export class InventoryMovmentsService {
         return await this.inventoryRepository.delete(id);
     }
 
-    async balance(): Promise<InventoryMovementsBalanceDto[]> {
-        let retObject: Array<InventoryMovementsBalanceDto>;
+    async balance(page: number = 1): Promise<InventoryMovementsBalanceDto[]> {
+        let retObject: Array<InventoryMovementsBalanceDto> = [];
         
-        const entries: InventoryMovmentEntity[] = await this.inventoryRepository.find({
+        const entries: InventoryMovementEntity[] = await this.inventoryRepository.find({
+            relations: ['product','client'],  
+            take: 15,
+            skip: 15 * (page - 1),    
             where: {
                 type: InventoryMovementType.ENTRY
             }
         });
 
-        entries.forEach(async (entry: InventoryMovmentEntity) => {
-            const exits: InventoryMovmentEntity[] = await this.inventoryRepository.find({
+        for(const entry of entries){
+            const exits: InventoryMovementEntity[] = await this.inventoryRepository.find({
+                relations: ['product','client'],      
                 where: {
                     type: InventoryMovementType.EXIT,
                     client_id: entry.client_id,
@@ -52,19 +61,12 @@ export class InventoryMovmentsService {
                 }
             });
 
-            if(exits){
-                retObject.push({
-                    entry,
-                    exits: [...exits]
-                })
-            }else{
-                retObject.push({
-                    entry,
-                    exits: null
-                })
-            }
-        })
-        console.log(retObject)
+            retObject.push({
+                entry,
+                exits: [...exits]
+            })
+        }
+
         return retObject;
     }
 }

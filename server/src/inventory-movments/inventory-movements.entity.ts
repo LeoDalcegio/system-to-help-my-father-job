@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { ProductEntity } from 'src/products/products.entity';
 import { ClientEntity } from 'src/clients/clients.entity';
 import { InventoryMovementType } from 'src/shared/enums/inventory-movements.enums';
 import { IsEnum } from 'class-validator';
 
-@Entity('inventory_movment')
-export class InventoryMovmentEntity {
+@Entity('inventory_movement')
+export class InventoryMovementEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -25,9 +25,17 @@ export class InventoryMovmentEntity {
     @Column('varchar', {length: 500, nullable: true})
     observation: string;
     
-    @OneToMany(() => ProductEntity, product => product.id)
-    product_id: ProductEntity;
+    @ManyToOne(() => ProductEntity, product => product.id)
+    @JoinColumn({ name: 'product_id' })
+    product: ProductEntity;
+
+    @Column({  type: 'int', nullable: false })
+    product_id: number;
     
-    @OneToMany(() => ClientEntity, client => client.id)
-    client_id: ClientEntity;
+    @ManyToOne(() => ClientEntity, client => client.id)
+    @JoinColumn({ name: 'client_id' })
+    client: ClientEntity;
+
+    @Column({  type: 'int', nullable: false })
+    client_id: number;
 }

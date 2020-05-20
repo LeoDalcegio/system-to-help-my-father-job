@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, ManyToOne } from 'typeorm';
-import { InventoryMovmentEntity } from 'src/inventory-movments/inventory-movements.entity';
 import { ProductType } from 'src/shared/enums/products.enums';
 import { IsEnum } from 'class-validator';
 
@@ -21,7 +20,4 @@ export class ProductEntity {
     
     @Column('varchar', {length: 500, nullable: true})
     observation: string;
-
-    @ManyToOne(() => InventoryMovmentEntity, inventoryMovement => inventoryMovement.product_id)
-    product_id: ProductEntity;
 }

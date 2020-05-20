@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Get, Put, Param, Delete, UseGuards } from '@nestjs/common';
-import { InventoryMovmentEntity } from './inventory-movements.entity';
+import { Controller, Post, Body, Get, Put, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { InventoryMovementEntity } from './inventory-movements.entity';
 import { InventoryMovmentsService } from './inventory-movements.service';
 import { AuthGuard } from '@nestjs/passport';
 import { InventoryMovementsBalanceDto } from './dto/inventory-movements-balance.dto';
+import { InventoryMovementType } from 'src/shared/enums/inventory-movements.enums';
 
 @Controller('inventory-movements')
 export class InventoryMovementsController {
@@ -10,29 +11,30 @@ export class InventoryMovementsController {
 
     @Post()
     @UseGuards(AuthGuard())  
-    async create(@Body() product: InventoryMovmentEntity): Promise<InventoryMovmentEntity> {
+    async create(@Body() product: InventoryMovementEntity): Promise<InventoryMovementEntity> {
         return await this.inventoryMovmentsService.create(product);
     }
 
     @Get()
-    async findAll(): Promise<InventoryMovmentEntity[]> {
-        return await this.inventoryMovmentsService.findAll();
+    async findAll(
+        @Query('page') page: number): Promise<InventoryMovementEntity[]> {
+        return await this.inventoryMovmentsService.findAll(page);
     }
 
     @Get('balance')
     @UseGuards(AuthGuard())  
-    async balance(): Promise<InventoryMovementsBalanceDto[]> {
-        return await this.inventoryMovmentsService.balance();
+    async balance(@Query('page') page: number): Promise<InventoryMovementsBalanceDto[]> {
+        return await this.inventoryMovmentsService.balance(page);
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: number): Promise<InventoryMovmentEntity> {
+    async findOne(@Param('id') id: number): Promise<InventoryMovementEntity> {
         return await this.inventoryMovmentsService.findOne(id);
     }
 
     @Put(':id')
     @UseGuards(AuthGuard())  
-    async update(@Param('id') id: number, @Body() product: InventoryMovmentEntity): Promise<any> {
+    async update(@Param('id') id: number, @Body() product: InventoryMovementEntity): Promise<any> {
         product.id = Number(id);
 
         return await this.inventoryMovmentsService.update(product); 

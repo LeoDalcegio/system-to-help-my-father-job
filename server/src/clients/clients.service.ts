@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { ClientEntity } from './clients.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,8 +12,11 @@ export class ClientsService {
         private clientRepository: Repository<ClientEntity>
     ) { }
     
-    async findAll(): Promise<ClientEntity[]> {
-        return await this.clientRepository.find();
+    async findAll(page: number  = 1): Promise<ClientEntity[]> {
+        return await this.clientRepository.find({
+            take: 15,
+            skip: 15 * (page - 1)
+        });
     }
 
     async findOne(id: number): Promise<ClientEntity> {

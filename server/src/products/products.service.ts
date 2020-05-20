@@ -12,8 +12,11 @@ export class ProductsService {
         private productRepository: Repository<ProductEntity>
     ) { }
     
-    async findAll(): Promise<ProductEntity[]> {
-        return await this.productRepository.find();
+    async findAll(page: number  = 1): Promise<ProductEntity[]> {
+        return await this.productRepository.find({
+            take: 15,
+            skip: 15 * (page - 1)
+        });
     }
 
     async findOne(id: number): Promise<ProductEntity> {

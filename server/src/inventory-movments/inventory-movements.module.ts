@@ -3,11 +3,11 @@ import { InventoryMovmentsService } from './inventory-movements.service';
 import { InventoryMovementsController } from './inventory-movements.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InventoryMovmentEntity } from './inventory-movements.entity';
+import { InventoryMovementEntity } from './inventory-movements.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([InventoryMovmentEntity]),
+        TypeOrmModule.forFeature([InventoryMovementEntity]),
         AuthModule,
     ],
     providers: [InventoryMovmentsService],

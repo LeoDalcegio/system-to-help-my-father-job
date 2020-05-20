@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Put, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Get, Put, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { ProductEntity } from './products.entity';
 import { ProductsService } from './products.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,8 +18,8 @@ export class ProductsController {
     }
 
     @Get()
-    async findAll(): Promise<ProductEntity[]> {
-        return await this.productsService.findAll();
+    async findAll(@Query('page') page: number): Promise<ProductEntity[]> {
+        return await this.productsService.findAll(page);
     }
 
     @Get(':id')

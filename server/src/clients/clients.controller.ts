@@ -14,8 +14,8 @@ export class ClientsController {
     }
 
     @Get()
-    async findAll(): Promise<ClientEntity[]> {
-        return await this.clientsService.findAll();
+    async findAll(@Param('page') page: number): Promise<ClientEntity[]> {
+        return await this.clientsService.findAll(page);
     }
 
     @Get(':id')

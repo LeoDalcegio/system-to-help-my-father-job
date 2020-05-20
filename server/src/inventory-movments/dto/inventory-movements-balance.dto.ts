@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsEmail } from 'class-validator';
-import { InventoryMovmentEntity } from '../inventory-movements.entity';
+import { InventoryMovementEntity } from '../inventory-movements.entity';
 
 export class InventoryMovementsBalanceDto {  
-    entry: InventoryMovmentEntity;
+    entry: InventoryMovementEntity;
 
-    exits: Array<InventoryMovmentEntity>;
+    exits: Array<InventoryMovementEntity>;
 }
 

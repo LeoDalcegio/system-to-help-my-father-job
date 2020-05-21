@@ -17,11 +17,11 @@ export default function Login({ history }) {
                 username,
                 password
             });
-
-            if(response.status !== 200){
+            
+            if(response.status !== 201){
                 return;
             }
-            
+
             const { authorization } = response.data;
 
             localStorage.setItem('username', username);
@@ -30,28 +30,28 @@ export default function Login({ history }) {
     }
 
     return (
-        <div className="login-container">
-            <form className="login-form" onSubmit = {handleSubmit}>
-                <h1 className="heading">Login</h1>
-                
-                    <input 
-                        placeholder="" 
-                        className="login-input" 
-                        type="text" 
-                        value={username}
-                        onChange={(event) => setUsername(event.target.value)}
-                    />
+        <form className="login-form" onSubmit = {handleSubmit}>
+            <h1 className="heading">Login</h1>
 
-                    <input 
-                        placeholder="" 
-                        className="login-input mt-20" 
-                        type="password" 
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                    />
+            <label for="username">Usuário</label>
+            <input  
+                className="login-input" 
+                type="text" 
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                id="username"
+            />
 
-                <button className="button mt-20" type="submit">Sign In</button>                    
-            </form>
-        </div>
+            <label for="password">Usuário</label>
+            <input 
+                className="login-input" 
+                type="password" 
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                id="password"
+            />
+
+            <button className="login-button" type="submit">Entrar</button>                    
+        </form>
     )
 }

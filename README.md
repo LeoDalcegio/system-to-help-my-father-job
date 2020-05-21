@@ -8,4 +8,4 @@
 
 - Run "yarn start".
 
-https://coolors.co/3f826d-f7f7ff-c03221-545e75-0d2816
+https://coolors.co/3f826d-f7f7ff-c03221-4f4f4f-333333

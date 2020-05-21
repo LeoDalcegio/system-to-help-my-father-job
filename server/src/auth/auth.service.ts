@@ -44,11 +44,11 @@ export class AuthService {
     private _createToken({ username }: UserDto): any {
         const user: JwtPayload = { username };    
         
-        const accessToken = this.jwtService.sign(user);  
+        const authorization = this.jwtService.sign(user);  
 
         return {
             expiresIn: process.env.EXPIRESIN,
-            accessToken,    
+            authorization,    
         };  
     }
     

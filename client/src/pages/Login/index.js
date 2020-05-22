@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import api from '../../services/api';
 
-import './styles.css'
+import './styles.css';
 
 export default function Login({ history }) {    
     const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ export default function Login({ history }) {
         if(!username || !password){
             alert('Informe um usuário e senha');
         }else{
-            const response = await api.post('/login', {
+            const response = await api.post('/auth/login', {
                 username,
                 password
             });
@@ -31,7 +31,7 @@ export default function Login({ history }) {
 
     return (
         <form className="login-form" onSubmit = {handleSubmit}>
-            <h1 className="heading">Login</h1>
+            <h1 className="login-heading">Bem-vindo</h1>
 
             <label for="username">Usuário</label>
             <input  
@@ -42,7 +42,7 @@ export default function Login({ history }) {
                 id="username"
             />
 
-            <label for="password">Usuário</label>
+            <label for="password">Senha</label>
             <input 
                 className="login-input" 
                 type="password" 

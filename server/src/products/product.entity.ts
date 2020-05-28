@@ -11,8 +11,8 @@ import {
     HasMany,
     AllowNull,
 } from 'sequelize-typescript';
-import { ProductType } from 'src/shared/enum/product-type.enums';
-import { InventoryMovement } from 'src/inventory-movements/inventory-movement.entity';
+import { ProductType } from '../shared/enum/product-type.enums';
+import { InventoryMovement } from '../inventory-movements/inventory-movement.entity';
 
 @Table({
     tableName: 'product',

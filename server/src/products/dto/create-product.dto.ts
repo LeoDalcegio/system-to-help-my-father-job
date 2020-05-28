@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum } from 'class-validator';
-import { ProductType } from 'src/shared/enum/product-type.enums';
+import { ProductType } from '../../shared/enum/product-type.enums';
 
 export class CreateProductDto {
     @ApiProperty()

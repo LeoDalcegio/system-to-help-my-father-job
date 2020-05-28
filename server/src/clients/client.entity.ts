@@ -10,7 +10,7 @@ import {
     AutoIncrement,
     PrimaryKey,
 } from 'sequelize-typescript';
-import { InventoryMovement } from 'src/inventory-movements/inventory-movement.entity';
+import { InventoryMovement } from '../inventory-movements/inventory-movement.entity';
 
 @Table({
     tableName: 'client',

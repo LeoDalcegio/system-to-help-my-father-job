@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { InventoryMovement } from '../inventory-movement.entity';
-import { InventoryMovementType } from 'src/shared/enum/inventory-movement-type.enums';
+import { InventoryMovementType } from '../../shared/enum/inventory-movement-type.enums';
 import { IsISO8601, IsDate } from 'class-validator';
 
 export class InventoryMovementDto {

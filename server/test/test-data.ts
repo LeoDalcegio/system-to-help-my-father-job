@@ -27,10 +27,6 @@ export const createUserDto4 = {
     birthday: 'not-valid-date',
 };
 
-export const createUserDto5 = {
-    ...createUserDto1,
-};
-
 export const userLoginRequestDto1: UserLoginRequestDto = {
     email: createUserDto1.email,
     password: createUserDto1.password,

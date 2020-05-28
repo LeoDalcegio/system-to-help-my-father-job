@@ -4,9 +4,9 @@ import { InventoryMovementDto } from './dto/inventory-movement.dto';
 import { UpdateInventoryMovementDto } from './dto/update-inventory-movement.dto';
 import { InventoryMovement } from './inventory-movement.entity';
 import { BalanceInventoryMovementDto } from './dto/balance-inventory-movement.dto';
-import { InventoryMovementType } from 'src/shared/enum/inventory-movement-type.enums';
-import { Client } from 'src/clients/client.entity';
-import { Product } from 'src/products/product.entity';
+import { InventoryMovementType } from '../shared/enum/inventory-movement-type.enums';
+import { Client } from '../clients/client.entity';
+import { Product } from '../products/product.entity';
 
 @Injectable()
 export class InventoryMovementsService {

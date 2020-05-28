@@ -7,7 +7,7 @@ import {
     IsEnum,
     IsISO8601,
 } from 'class-validator';
-import { InventoryMovementType } from 'src/shared/enum/inventory-movement-type.enums';
+import { InventoryMovementType } from '../../shared/enum/inventory-movement-type.enums';
 
 export class CreateInventoryMovementDto {
     @ApiProperty()

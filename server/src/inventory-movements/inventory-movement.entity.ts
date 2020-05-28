@@ -11,9 +11,9 @@ import {
     BelongsTo,
     ForeignKey,
 } from 'sequelize-typescript';
-import { InventoryMovementType } from 'src/shared/enum/inventory-movement-type.enums';
-import { Client } from 'src/clients/client.entity';
-import { Product } from 'src/products/product.entity';
+import { InventoryMovementType } from '../shared/enum/inventory-movement-type.enums';
+import { Client } from '../clients/client.entity';
+import { Product } from '../products/product.entity';
 
 @Table({
     tableName: 'inventory_movement',

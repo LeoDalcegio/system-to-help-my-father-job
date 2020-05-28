@@ -6,7 +6,7 @@ import { setupSwagger } from './swagger';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    const PORT = 3000;// || process.env.PORT;
+    const PORT = 3000 || process.env.PORT;
 
     app.useGlobalPipes(new ValidationPipe());
 

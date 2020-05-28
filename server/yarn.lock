@@ -449,7 +449,7 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@nestjs/common@^7.0.1":
+"@nestjs/common@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-7.1.0.tgz#4fe8bc15903ee23d458c429b5cf7579edb0ef3a3"
   integrity sha512-8m3GtC4qq3fVt7Ly4L54AO/NHwJR3Dt6wd3IoVLB9qZREYRoZMycpQTbzOLXkZh7wjzvHfWTNg4e4tFCCQD1qg==
@@ -460,7 +460,7 @@
     tslib "2.0.0"
     uuid "8.0.0"
 
-"@nestjs/core@^7.0.1":
+"@nestjs/core@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-7.1.0.tgz#fbdd2388c2fc86c11d69ffd9c4ba8936491b4548"
   integrity sha512-gnlQp+VmcEFwUVbwBOipdOKPHgk0CSAMEKiWrr+Jih2MXFPayAKphlRGzWQ0dFTmpMuZ1LhAfBLcejJXyBIj4g==
@@ -4676,7 +4676,7 @@ rsvp@^4.8.4:
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"
   integrity sha512-nfMOlASu9OnRJo1mbEk2cz0D56a1MBNrJ7orjRZQG10XDyuvwksKbuXNp6qa+kbn839HwjwhBzhFmdsaEAfauA==
 
-rxjs@^6.5.4:
+rxjs@^6.5.5:
   version "6.5.5"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.5.tgz#c5c884e3094c8cfee31bf27eb87e54ccfc87f9ec"
   integrity sha512-WfQI+1gohdf0Dai/Bbmk5L5ItH5tYqm3ki2c5GdWhKjalzjg93N3avFjVStyZZz+A2Em+ZxKH5bNghw9UeylGQ==

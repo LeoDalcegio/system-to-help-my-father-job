@@ -9,7 +9,11 @@ export const databaseProviders = [
     {
         provide: 'SEQUELIZE',
         useFactory: async (configService: ConfigService) => {
-            const sequelize = new Sequelize(configService.sequelizeOrmConfig);
+            //const sequelize = new Sequelize(configService.sequelizeOrmConfig);
+            const sequelize = new Sequelize('nsnppava', 'nsnppava', 'p20opkKQZMaodEYfYTuwncJxHnC5K46g', {
+                host: 'tuffi.db.elephantsql.com',
+                dialect: 'postgres'
+            });
 
             sequelize.addModels([User, Product, Client, InventoryMovement]);
 

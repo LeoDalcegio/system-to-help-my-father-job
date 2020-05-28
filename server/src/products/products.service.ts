@@ -1,58 +1,69 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Repository, Not } from 'typeorm';
-import { ProductEntity } from './products.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateResult, DeleteResult } from  'typeorm';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { CreateProductDto } from './dto/create-product.dto';
+import { Product } from './product.entity';
+import { ProductDto } from './dto/product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
-  
     constructor(
-        @InjectRepository(ProductEntity) 
-        private productRepository: Repository<ProductEntity>
-    ) { }
-    
-    async findAll(page: number  = 1): Promise<ProductEntity[]> {
-        return await this.productRepository.find({
-            take: 15,
-            skip: 15 * (page - 1)
-        });
+        @Inject('ProductsRepository')
+        private readonly productsRepository: typeof Product,
+    ) {}
+
+    async findAll() {
+        const products = await this.productsRepository.findAll<Product>();
+
+        return products.map(product => new ProductDto(product)); // verificar se isso é necessário
     }
 
-    async findOne(id: number): Promise<ProductEntity> {
-        return await this.productRepository.findOne(id);
-    }
+    async findOne(id: number) {
+        const product = await this.productsRepository.findByPk<Product>(id);
 
-    async create(product: ProductEntity): Promise<ProductEntity> {
-        const productExist: ProductEntity = await this.productRepository.findOne(
-        {
-            product_code: product.product_code 
-        });
-        
-        if(productExist){
-             throw new HttpException('Código de produto já existente', HttpStatus.BAD_REQUEST);
+        if (!product) {
+            throw new HttpException('Produto não encontrado', HttpStatus.NOT_FOUND);
         }
 
-        return await this.productRepository.save(product);
+        return new ProductDto(product);
     }
 
-    async update(product: ProductEntity): Promise<UpdateResult> {
-        const productExist: ProductEntity = await this.productRepository.findOne(
-        {
-            where: {
-                product_code: product.product_code,
-                id: Not(product.id)
-            }    
-        });
-        
-        if(productExist){
-            throw new HttpException('Código de produto já existente', HttpStatus.BAD_REQUEST);
-        }
-        
-        return this.productRepository.update(product.id, product);
+    async create(createProductDto: CreateProductDto) {
+        const product = new Product();
+
+        product.productCode = createProductDto.productCode;
+        product.observation = createProductDto.observation;
+        product.productDescription = createProductDto.productDescription;
+        product.type = createProductDto.type;
+
+        return product.save();
     }
-    
-    async delete(id: number): Promise<DeleteResult> {
-        return await this.productRepository.delete(id);
+
+    async update(id: number, updateProductDto: UpdateProductDto) {
+        const product = await this.productsRepository.findByPk<Product>(id);
+
+        if (!product) {
+            throw new HttpException('Produto não encontrado.', HttpStatus.NOT_FOUND);
+        }
+
+        product.productCode = updateProductDto.productCode || product.productCode;
+        product.observation = updateProductDto.observation || product.observation;
+        product.productDescription = updateProductDto.productDescription || product.productDescription;
+        product.type = updateProductDto.type || product.type;
+
+        try {
+            const data = await product.save();
+
+            return new ProductDto(data);
+        } catch (err) {
+            throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async delete(id: number) {
+        const product = await this.productsRepository.findByPk<Product>(id);
+
+        await product.destroy();
+
+        return new ProductDto(product);
     }
 }

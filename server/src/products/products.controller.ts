@@ -1,43 +1,72 @@
-import { Controller, Post, Body, Get, Put, Param, Delete, UseGuards, Query } from '@nestjs/common';
-import { ProductEntity } from './products.entity';
+import {
+    Controller,
+    Body,
+    Post,
+    UseGuards,
+    Get,
+    Param,
+    ParseIntPipe,
+    Delete,
+    Put,
+} from '@nestjs/common';
+import {
+    ApiCreatedResponse,
+    ApiBearerAuth,
+    ApiOkResponse,
+    ApiParam,
+    ApiTags,
+} from '@nestjs/swagger';
+import { CreateProductDto } from './dto/create-product.dto'; // leo
 import { ProductsService } from './products.service';
 import { AuthGuard } from '@nestjs/passport';
+import { Product as ProductEntity } from './product.entity';
+import { ProductDto } from './dto/product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
+@ApiTags('products')
 export class ProductsController {
-    constructor(private productsService: ProductsService) {}
-
-    @Post()
-    @UseGuards(AuthGuard())  
-    async create(@Body() product: ProductEntity): Promise<ProductEntity> {
-        let createdProduct: ProductEntity;
-
-        createdProduct = await this.productsService.create(product);
-
-        return createdProduct;
-    }
+    constructor(private readonly productsService: ProductsService) {}
 
     @Get()
-    async findAll(@Query('page') page: number): Promise<ProductEntity[]> {
-        return await this.productsService.findAll(page);
+    @ApiOkResponse({ type: [ProductDto] })
+    findAll(): Promise<ProductDto[]> {
+        return this.productsService.findAll();
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: number): Promise<ProductEntity> {
-        return await this.productsService.findOne(id);
+    @ApiOkResponse({ type: ProductDto })
+    @ApiParam({ name: 'id', required: true })
+    findOne(@Param('id', new ParseIntPipe()) id: number): Promise<ProductDto> {
+        return this.productsService.findOne(id);
+    }
+
+    @Post()
+    @ApiCreatedResponse({ type: ProductEntity })
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    create(@Body() createProductDto: CreateProductDto): Promise<ProductEntity> {
+        return this.productsService.create(createProductDto);
     }
 
     @Put(':id')
-    @UseGuards(AuthGuard())  
-    async update(@Param('id') id: number, @Body() product: ProductEntity): Promise<any> {
-        product.id = Number(id);
-        
-        return await this.productsService.update(product); 
-    } 
+    @ApiOkResponse({ type: ProductDto })
+    @ApiParam({ name: 'id', required: true })
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    update(
+        @Param('id', new ParseIntPipe()) id: number,
+        @Body() updateProductDto: UpdateProductDto,
+    ): Promise<ProductDto> {
+        return this.productsService.update(id, updateProductDto);
+    }
 
     @Delete(':id')
-    @UseGuards(AuthGuard())  
-    async remove(@Param('id') id: number): Promise<any> {
-        return await this.productsService.delete(id);
+    @ApiOkResponse({ type: ProductDto })
+    @ApiParam({ name: 'id', required: true })
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    delete(@Param('id', new ParseIntPipe()) id: number): Promise<ProductDto> {
+        return this.productsService.delete(id);
     }
 }

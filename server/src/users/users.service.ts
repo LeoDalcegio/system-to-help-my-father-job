@@ -1,62 +1,128 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './users.entity';
-import { Repository } from 'typeorm';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { User } from './user.entity';
+import { genSalt, hash, compare } from 'bcrypt';
 import { UserDto } from './dto/user.dto';
-import { toUserDto } from 'src/shared/mapper';
-import { LoginUserDto } from './dto/login-user.dto';
+import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { comparePasswords } from 'src/shared/utils';
+import { UserLoginResponseDto } from './dto/user-login-response.dto';
+import { JwtPayload } from './auth/jwt-payload.model';
+import { sign } from 'jsonwebtoken';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { ConfigService } from './../shared/config/config.service';
 
 @Injectable()
 export class UsersService {
+    private readonly jwtPrivateKey: string;
+
     constructor(
-    @InjectRepository(UserEntity)    
-    private readonly userRepository: Repository<UserEntity>, ) {}
-
-    async findOne(options?: object): Promise<UserDto> {
-        const user =  await this.userRepository.findOne(options); 
-
-        return toUserDto(user);  
+        @Inject('UsersRepository')
+        private readonly usersRepository: typeof User,
+        private readonly configService: ConfigService,
+    ) {
+        this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
     }
 
-    async findByLogin({ username, password }: LoginUserDto): Promise<UserDto> {    
-        const user = await this.userRepository.findOne({ where: { username } });
-        
+    async findAll() {
+        const users = await this.usersRepository.findAll<User>();
+        return users.map(user => new UserDto(user));
+    }
+
+    async getUser(id: string) {
+        const user = await this.usersRepository.findByPk<User>(id);
         if (!user) {
-            throw new HttpException('Usuário não encontrado', HttpStatus.UNAUTHORIZED);    
+            throw new HttpException(
+                'User with given id not found',
+                HttpStatus.NOT_FOUND,
+            );
         }
-        
-        const areEqual = await comparePasswords(user.password, password);
-        
-        if (!areEqual) {
-            throw new HttpException('Usuario ou senha inválidos', HttpStatus.UNAUTHORIZED);    
-        }
-        
-        return toUserDto(user);  
-    }
-    
-    async findByPayload({ username }: any): Promise<UserDto> {
-        return await this.findOne({ 
-            where:  { username } 
-        });  
+        return new UserDto(user);
     }
 
-    async create(userDto: CreateUserDto): Promise<UserDto> {    
-        const { username, password, email } = userDto;
-        
-        const userInDb = await this.userRepository.findOne({ 
-            where: { username } 
+    async getUserByEmail(email: string) {
+        return await this.usersRepository.findOne<User>({
+            where: { email },
         });
-        
-        if (userInDb) {
-            throw new HttpException('Usuário já existente', HttpStatus.BAD_REQUEST);    
+    }
+
+    async create(createUserDto: CreateUserDto) {
+        try {
+            const user = new User();
+            user.email = createUserDto.email.trim().toLowerCase();
+            user.firstName = createUserDto.firstName;
+            user.lastName = createUserDto.lastName;
+
+            const salt = await genSalt(10);
+            user.password = await hash(createUserDto.password, salt);
+
+            const userData = await user.save();
+
+            // when registering then log user in automatically by returning a token
+            const token = await this.signToken(userData);
+            return new UserLoginResponseDto(userData, token);
+        } catch (err) {
+            if (err.original.constraint === 'user_email_key') {
+                throw new HttpException(
+                    `User with email '${err.errors[0].value}' already exists`,
+                    HttpStatus.CONFLICT,
+                );
+            }
+
+            throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        const user: UserEntity = this.userRepository.create({ username, password, email, });
-        
-        await this.userRepository.save(user);
-        
-        return toUserDto(user);  
+    }
+
+    async login(userLoginRequestDto: UserLoginRequestDto) {
+        const email = userLoginRequestDto.email;
+        const password = userLoginRequestDto.password;
+
+        const user = await this.getUserByEmail(email);
+        if (!user) {
+            throw new HttpException(
+                'Invalid email or password.',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        const isMatch = await compare(password, user.password);
+        if (!isMatch) {
+            throw new HttpException(
+                'Invalid email or password.',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        const token = await this.signToken(user);
+        return new UserLoginResponseDto(user, token);
+    }
+
+    async update(id: string, updateUserDto: UpdateUserDto) {
+        const user = await this.usersRepository.findByPk<User>(id);
+        if (!user) {
+            throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
+        }
+
+        user.firstName = updateUserDto.firstName || user.firstName;
+        user.lastName = updateUserDto.lastName || user.lastName;
+
+        try {
+            const data = await user.save();
+            return new UserDto(data);
+        } catch (err) {
+            throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async delete(id: string) {
+        const user = await this.usersRepository.findByPk<User>(id);
+        await user.destroy();
+        return new UserDto(user);
+    }
+
+    async signToken(user: User) {
+        const payload: JwtPayload = {
+            email: user.email,
+        };
+
+        return sign(payload, this.jwtPrivateKey, {});
     }
 }

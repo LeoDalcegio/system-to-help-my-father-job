@@ -1,28 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ProductsModule } from './products/products.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { ClientModule } from './clients/clients.module';
-import { InventoryMovmentsModule } from './inventory-movments/inventory-movements.module';
+import { SharedModule } from './shared/shared.module';
+import { InventoryMovementsModule } from './inventory-movements/inventory-movements.module';
+import { ClientsModule } from './clients/clients.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
-  imports: [
-      ProductsModule,
-      TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: 'db',
-          entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: true
-      }),
-      UsersModule,
-      AuthModule,
-      ClientModule,
-      InventoryMovmentsModule
-    ],
-    controllers: [AppController],
-    providers: [AppService],
+    imports: [UsersModule, SharedModule, InventoryMovementsModule, ClientsModule, ProductsModule],
+    controllers: [],
+    providers: [],
 })
 export class AppModule {}

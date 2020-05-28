@@ -1,7 +1,7 @@
 {
-    "name": "nest-sequelize-typescript",
+    "name": "system-to-help-my-father-job",
     "version": "0.0.1",
-    "description": "Nest + sequelize-typescript + JWT + Jest + Swagger",
+    "description": "",
     "keywords": [
         "nest",
         "nestjs",
@@ -20,7 +20,7 @@
         "jest"
     ],
     "author": "Leonardo Luís Dalcegio",
-    "license": "MIT",
+    "license": "",
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
         "format": "prettier --write \"src/**/*.ts\"",

@@ -5,7 +5,6 @@ import {
     DataType,
     CreatedAt,
     UpdatedAt,
-    DeletedAt,
     HasMany,
     AutoIncrement,
     PrimaryKey,
@@ -37,8 +36,4 @@ export class Client extends Model<Client> {
     @UpdatedAt
     @Column({ field: 'updated_at' })
     updatedAt: Date;
-
-    @DeletedAt
-    @Column({ field: 'deleted_at' })
-    deletedAt: Date;
 }

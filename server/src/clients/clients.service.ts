@@ -43,8 +43,8 @@ export class ClientsService {
             throw new HttpException('Cliente não encontrado.', HttpStatus.NOT_FOUND);
         }
 
-        client.observation = updateClientDto.observation || client.observation;
-        client.name = updateClientDto.name || client.name;
+        client.observation = updateClientDto.observation;
+        client.name = updateClientDto.name;
 
         try {
             const data = await client.save();

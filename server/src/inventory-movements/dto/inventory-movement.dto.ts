@@ -11,8 +11,6 @@ export class InventoryMovementDto {
     readonly noteNumber: number;
 
     @ApiProperty()
-    @IsISO8601()
-    @IsDate()
     readonly movementDate: Date;
 
     @ApiProperty()

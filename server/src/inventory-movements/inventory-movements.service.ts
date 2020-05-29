@@ -33,7 +33,6 @@ export class InventoryMovementsService {
 
     async balance(): Promise<BalanceInventoryMovementDto[]> {
         const retObject: BalanceInventoryMovementDto[] = [];
-
         const entries: InventoryMovementDto[] = await this.inventoryMovementsRepository.findAll({
             include: [Product, Client],
             where: {
@@ -64,6 +63,12 @@ export class InventoryMovementsService {
         const inventoryMovement = new InventoryMovement();
 
         inventoryMovement.observation = createInventoryMovementDto.observation;
+        inventoryMovement.clientId = createInventoryMovementDto.clientId;
+        inventoryMovement.movementDate = createInventoryMovementDto.movementDate;
+        inventoryMovement.noteNumber = createInventoryMovementDto.noteNumber;
+        inventoryMovement.productId = createInventoryMovementDto.productId;
+        inventoryMovement.quantity = createInventoryMovementDto.quantity;
+        inventoryMovement.type = createInventoryMovementDto.type;
 
         return inventoryMovement.save();
     }
@@ -75,7 +80,13 @@ export class InventoryMovementsService {
             throw new HttpException('Movimentação de estoque não encontrada.', HttpStatus.NOT_FOUND);
         }
 
-        inventoryMovement.observation = updateInventoryMovementDto.observation || inventoryMovement.observation;
+        inventoryMovement.clientId = updateInventoryMovementDto.clientId;
+        inventoryMovement.movementDate = updateInventoryMovementDto.movementDate;
+        inventoryMovement.noteNumber = updateInventoryMovementDto.noteNumber;
+        inventoryMovement.observation = updateInventoryMovementDto.observation;
+        inventoryMovement.productId = updateInventoryMovementDto.productId;
+        inventoryMovement.quantity = updateInventoryMovementDto.quantity;
+        inventoryMovement.type = updateInventoryMovementDto.type;
 
         try {
             const data = await inventoryMovement.save();

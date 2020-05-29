@@ -35,17 +35,17 @@ export class InventoryMovementsController {
         return this.inventoryMovementsService.findAll();
     }
 
+    @Get('balance')
+    @ApiOkResponse({ type: [BalanceInventoryMovementDto] })
+    balance(): Promise<BalanceInventoryMovementDto[]> {
+        return this.inventoryMovementsService.balance();
+    }
+
     @Get(':id')
     @ApiOkResponse({ type: InventoryMovementDto })
     @ApiParam({ name: 'id', required: true })
     findOne(@Param('id', new ParseIntPipe()) id: number): Promise<InventoryMovementDto> {
         return this.inventoryMovementsService.findOne(id);
-    }
-
-    @Get('balance')
-    @ApiOkResponse({ type: [BalanceInventoryMovementDto] })
-    balance(): Promise<BalanceInventoryMovementDto[]> {
-        return this.inventoryMovementsService.balance();
     }
 
     @Post()

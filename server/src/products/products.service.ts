@@ -45,10 +45,10 @@ export class ProductsService {
             throw new HttpException('Produto não encontrado.', HttpStatus.NOT_FOUND);
         }
 
-        product.productCode = updateProductDto.productCode || product.productCode;
-        product.observation = updateProductDto.observation || product.observation;
-        product.productDescription = updateProductDto.productDescription || product.productDescription;
-        product.type = updateProductDto.type || product.type;
+        product.productCode = updateProductDto.productCode;
+        product.observation = updateProductDto.observation;
+        product.productDescription = updateProductDto.productDescription;
+        product.type = updateProductDto.type;
 
         try {
             const data = await product.save();

@@ -19,6 +19,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import BusinessIcon from '@material-ui/icons/Business';
 import DescriptionIcon from '@material-ui/icons/Description';
 import BuildIcon from '@material-ui/icons/Build';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -143,15 +144,16 @@ export default function Header({ children }) {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button>
+                    <ListItem button component={Link} to="/products">
                         <ListItemIcon><DescriptionIcon /></ListItemIcon>
                         <ListItemText primary='Produtos' />
                     </ListItem>
-                    <ListItem button>
+
+                    <ListItem button component={Link} to="/clients">
                         <ListItemIcon><PeopleIcon /></ListItemIcon>
                         <ListItemText primary='Clientes' />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button component={Link} to="/inventory">
                         <ListItemIcon><BusinessIcon /></ListItemIcon>
                         <ListItemText primary='Estoque' />
                     </ListItem>

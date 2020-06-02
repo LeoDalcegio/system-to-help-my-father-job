@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import DefaultTable from '../../components/DefaultTable';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import api from '../../services/api';
 
@@ -10,7 +12,7 @@ import './styles.css';
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
-      margin: theme.spacing(1)
+      margin: theme.spacing(1),
     },
   },
 }));
@@ -92,7 +94,17 @@ export default function Products({ history }) {
                 <div className="products-search">
                     <TextField id="outlined-search" label="Código do produto..." type="search" variant="outlined" />
                     <TextField id="outlined-search" label="Descrição do produto..." type="search" variant="outlined" />
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        startIcon={<DeleteIcon />}
+                    >
+                        Filtrar
+                    </Button>
                 </div>
+
+                
             </form>
             
 

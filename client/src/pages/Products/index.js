@@ -3,7 +3,7 @@ import DefaultTable from '../../components/DefaultTable';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
+import SearchIcon from '@material-ui/icons/Search';
 
 import api from '../../services/api';
 
@@ -11,7 +11,7 @@ import './styles.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& .MuiTextField-root': {
+    '& .MuiTextField-root, .MuiButton-root': {
       margin: theme.spacing(1),
     },
   },
@@ -96,17 +96,14 @@ export default function Products({ history }) {
                     <TextField id="outlined-search" label="Descrição do produto..." type="search" variant="outlined" />
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         className={classes.button}
-                        startIcon={<DeleteIcon />}
+                        startIcon={<SearchIcon />}
                     >
-                        Filtrar
+                        Buscar
                     </Button>
                 </div>
-
-                
             </form>
-            
 
             <DefaultTable columns={columns} rows={rows}/>
         </div>

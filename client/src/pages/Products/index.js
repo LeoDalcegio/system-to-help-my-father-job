@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import DefaultTable from '../../components/DefaultTable';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+
 import api from '../../services/api';
 
 import './styles.css';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1)
+    },
+  },
+}));
 
 const columns = [
     { id: 'id', label: 'Id', maxWidth: 20 },
@@ -58,6 +69,7 @@ const rows = [
 
 export default function Products({ history }) {
     const [products, setProducts] = useState([]);
+    const classes = useStyles();
 
     useEffect(() => {
         async function loadProducts() {
@@ -76,9 +88,14 @@ export default function Products({ history }) {
     
     return (
         <div className="products-container">
-            <div className="products-search">
+            <form className={classes.root} noValidate autoComplete="off">
+                <div className="products-search">
+                    <TextField id="outlined-search" label="Código do produto..." type="search" variant="outlined" />
+                    <TextField id="outlined-search" label="Descrição do produto..." type="search" variant="outlined" />
+                </div>
+            </form>
+            
 
-            </div>
             <DefaultTable columns={columns} rows={rows}/>
         </div>
     );

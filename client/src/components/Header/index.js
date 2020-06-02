@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    marginTop: 70
   },
 }));
 
@@ -157,7 +158,7 @@ export default function Header({ children }) {
             </ListItem>
           ))}
         </List>
-      </Drawer>
+      </Drawer>    
       <main className={classes.content}>
         {children}
       </main>

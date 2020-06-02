@@ -15,9 +15,10 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import PeopleIcon from '@material-ui/icons/People';
 import BusinessIcon from '@material-ui/icons/Business';
+import DescriptionIcon from '@material-ui/icons/Description';
+import BuildIcon from '@material-ui/icons/Build';
 
 const drawerWidth = 240;
 
@@ -143,7 +144,7 @@ export default function Header({ children }) {
                 <Divider />
                 <List>
                     <ListItem button>
-                        <ListItemIcon><InboxIcon /></ListItemIcon>
+                        <ListItemIcon><DescriptionIcon /></ListItemIcon>
                         <ListItemText primary='Produtos' />
                     </ListItem>
                     <ListItem button>
@@ -158,7 +159,7 @@ export default function Header({ children }) {
                 <Divider />
                 <List>
                     <ListItem button>
-                        <ListItemIcon><InboxIcon /></ListItemIcon>
+                        <ListItemIcon><BuildIcon /></ListItemIcon>
                         <ListItemText primary='Configurações' />
                     </ListItem>
                 </List>

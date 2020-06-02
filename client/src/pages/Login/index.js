@@ -4,28 +4,30 @@ import api from '../../services/api';
 import './styles.css';
 
 export default function Login({ history }) {    
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    async function handleSubmit(event){
-        event.preventDefault();
+    async function handleSubmit(e){
+        e.preventDefault();
 
-        if(!username || !password){
-            alert('Informe um usuário e senha');
+        if(!email || !password){
+            alert('Informe um email e senha');
         }else{
-            const response = await api.post('/auth/login', {
-                username,
+            const response = await api.post('/users/login', {
+                email,
                 password
             });
             
             if(response.status !== 201){
                 return;
             }
-
+            
             const { authorization } = response.data;
 
-            localStorage.setItem('username', username);
+            localStorage.setItem('email', email);
             localStorage.setItem('authorization', authorization);
+
+            history.push('/products')
         }
     }
 
@@ -33,16 +35,16 @@ export default function Login({ history }) {
         <form className="login-form" onSubmit = {handleSubmit}>
             <h1 className="login-heading">Bem-vindo</h1>
 
-            <label for="username">Usuário</label>
+            <label htmlFor="email">Email</label>
             <input  
                 className="login-input" 
-                type="text" 
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                id="username"
+                type="email" 
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                id="email"
             />
 
-            <label for="password">Senha</label>
+            <label htmlFor="password">Senha</label>
             <input 
                 className="login-input" 
                 type="password" 

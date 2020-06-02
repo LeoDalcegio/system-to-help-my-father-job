@@ -33,8 +33,13 @@ export class ProductsController {
     @Get()
     @ApiOkResponse({ type: [ProductDto] })
     @ApiQuery({ name: 'page', required: true })
-    findAll(@Query('page', new ParseIntPipe()) page: number): Promise<ProductDto[]> {
-        return this.productsService.findAll(page);
+    @ApiQuery({ name: 'limit', required: true })
+    findAll(
+        @Query('page', new ParseIntPipe()) page: number,
+        @Query('limit', new ParseIntPipe()) limit: number,
+        )
+        : Promise<ProductDto[]> {
+        return this.productsService.findAll(page, limit);
     }
 
     @Get(':id')

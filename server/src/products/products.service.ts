@@ -11,10 +11,27 @@ export class ProductsService {
         private readonly productsRepository: typeof Product,
     ) {}
 
-    async findAll(page: number) {
+    async findAll(
+        page: number, 
+        limit: number = 15, 
+        productCode?: string, 
+        productDescription?: string
+    ) {
+
+        let where = { };
+
+        if (productCode) {
+            where['productCode'] = productCode
+        }
+
+        if (productDescription) {
+            where['productDescription'] = productDescription
+        }
+
         const products = await this.productsRepository.findAndCountAll<Product>({
+            where,
             order: ['id'],
-            limit: 10,
+            limit: limit,
             offset: page,
         });
 

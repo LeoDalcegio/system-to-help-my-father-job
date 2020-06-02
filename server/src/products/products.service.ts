@@ -11,10 +11,14 @@ export class ProductsService {
         private readonly productsRepository: typeof Product,
     ) {}
 
-    async findAll() {
-        const products = await this.productsRepository.findAll<Product>();
+    async findAll(page: number) {
+        const products = await this.productsRepository.findAndCountAll<Product>({
+            order: ['id'],
+            limit: 10,
+            offset: page,
+        });
 
-        return products.map(product => new ProductDto(product)); // verificar se isso é necessário
+        return products.rows.map(product => new ProductDto(product)); // verificar se isso é necessário
     }
 
     async findOne(id: number) {

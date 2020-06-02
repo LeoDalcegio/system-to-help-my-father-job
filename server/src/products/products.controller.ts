@@ -8,6 +8,7 @@ import {
     ParseIntPipe,
     Delete,
     Put,
+    Query,
 } from '@nestjs/common';
 import {
     ApiCreatedResponse,
@@ -15,6 +16,7 @@ import {
     ApiOkResponse,
     ApiParam,
     ApiTags,
+    ApiQuery,
 } from '@nestjs/swagger';
 import { CreateProductDto } from './dto/create-product.dto'; // leo
 import { ProductsService } from './products.service';
@@ -30,8 +32,9 @@ export class ProductsController {
 
     @Get()
     @ApiOkResponse({ type: [ProductDto] })
-    findAll(): Promise<ProductDto[]> {
-        return this.productsService.findAll();
+    @ApiQuery({ name: 'page', required: true })
+    findAll(@Query('page', new ParseIntPipe()) page: number): Promise<ProductDto[]> {
+        return this.productsService.findAll(page);
     }
 
     @Get(':id')

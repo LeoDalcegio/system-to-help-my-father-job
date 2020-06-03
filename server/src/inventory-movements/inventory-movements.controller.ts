@@ -15,6 +15,7 @@ import {
     ApiOkResponse,
     ApiParam,
     ApiTags,
+    ApiQuery,
 } from '@nestjs/swagger';
 import { CreateInventoryMovementDto } from './dto/create-inventory-movement.dto'; // leo
 import { AuthGuard } from '@nestjs/passport';
@@ -23,6 +24,7 @@ import { InventoryMovementDto } from './dto/inventory-movement.dto';
 import { InventoryMovementsService } from './inventory-movements.service';
 import { UpdateInventoryMovementDto } from './dto/update-inventory-movement.dto';
 import { BalanceInventoryMovementDto } from './dto/balance-inventory-movement.dto';
+import { Query } from '@nestjs/common';
 
 @Controller('inventory-movements')
 @ApiTags('inventory-movements')
@@ -31,14 +33,24 @@ export class InventoryMovementsController {
 
     @Get()
     @ApiOkResponse({ type: [InventoryMovementDto] })
-    findAll(): Promise<InventoryMovementDto[]> {
-        return this.inventoryMovementsService.findAll();
+    @ApiQuery({ name: 'page', required: true })
+    @ApiQuery({ name: 'limit', required: true })
+    findAll(
+        @Query('page', new ParseIntPipe()) page: number,
+        @Query('limit', new ParseIntPipe()) limit: number,
+    ): Promise<InventoryMovementDto[]> {
+        return this.inventoryMovementsService.findAll(page, limit);
     }
 
     @Get('balance')
+    @ApiQuery({ name: 'page', required: true })
+    @ApiQuery({ name: 'limit', required: true })
     @ApiOkResponse({ type: [BalanceInventoryMovementDto] })
-    balance(): Promise<BalanceInventoryMovementDto[]> {
-        return this.inventoryMovementsService.balance();
+    balance(
+        @Query('page', new ParseIntPipe()) page: number,
+        @Query('limit', new ParseIntPipe()) limit: number,
+    ): Promise<BalanceInventoryMovementDto[]> {
+        return this.inventoryMovementsService.balance(page, limit);
     }
 
     @Get(':id')

@@ -15,10 +15,17 @@ export class InventoryMovementsService {
         private readonly inventoryMovementsRepository: typeof InventoryMovement,
     ) {}
 
-    async findAll() {
-        const inventoryMovements = await this.inventoryMovementsRepository.findAll<InventoryMovement>();
+    async findAll(
+        page: number,
+        limit: number = 15,
+    ) {
+        const inventoryMovements = await this.inventoryMovementsRepository.findAndCountAll<InventoryMovement>({
+            order: ['id'],
+            limit: limit,
+            offset: page,
+        });
 
-        return inventoryMovements.map(inventoryMovement => new InventoryMovementDto(inventoryMovement)); // verificar se isso é necessário
+        return inventoryMovements.rows.map(inventoryMovement => new InventoryMovementDto(inventoryMovement)); // verificar se isso é necessário
     }
 
     async findOne(id: number) {
@@ -31,13 +38,20 @@ export class InventoryMovementsService {
         return new InventoryMovementDto(inventoryMovement);
     }
 
-    async balance(): Promise<BalanceInventoryMovementDto[]> {
+    async balance(
+        page: number,
+        limit: number = 15,
+    ): Promise<BalanceInventoryMovementDto[]> {
         const retObject: BalanceInventoryMovementDto[] = [];
+
         const entries: InventoryMovementDto[] = await this.inventoryMovementsRepository.findAll({
             include: [Product, Client],
             where: {
                 type: InventoryMovementType.ENTRY
-            }
+            },
+            order: ['id'],
+            limit: limit,
+            offset: page,
         });
 
         for(const entry of entries){

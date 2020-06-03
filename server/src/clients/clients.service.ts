@@ -11,8 +11,15 @@ export class ClientsService {
         private readonly clientsRepository: typeof Client,
     ) {}
 
-    async findAll() {
-        const clients = await this.clientsRepository.findAll<Client>();
+    async findAll(
+        page: number,
+        limit: number = 15,
+    ) {
+        const clients = await this.clientsRepository.findAll<Client>({
+            order: ['id'],
+            limit: limit,
+            offset: page,
+        });
 
         return clients.map(client => new ClientDto(client)); // verificar se isso é necessário
     }

@@ -28,14 +28,14 @@ export class ProductsService {
             where['productDescription'] = productDescription
         }
 
-        const products = await this.productsRepository.findAndCountAll<Product>({
+        const products = await this.productsRepository.findAll<Product>({
             where,
             order: ['id'],
             limit: limit,
             offset: page,
         });
 
-        return products.rows.map(product => new ProductDto(product)); // verificar se isso é necessário
+        return products.map(product => new ProductDto(product)); // verificar se isso é necessário
     }
 
     async findOne(id: number) {

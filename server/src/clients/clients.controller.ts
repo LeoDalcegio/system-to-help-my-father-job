@@ -15,6 +15,7 @@ import {
     ApiOkResponse,
     ApiParam,
     ApiTags,
+    ApiQuery,
 } from '@nestjs/swagger';
 import { CreateClientDto } from './dto/create-client.dto'; // leo
 import { AuthGuard } from '@nestjs/passport';
@@ -22,16 +23,22 @@ import { Client as ClientEntity } from './client.entity';
 import { ClientDto } from './dto/client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { ClientsService } from './clients.service';
+import { Query } from '@nestjs/common';
 
 @Controller('clients')
 @ApiTags('clients')
 export class ClientsController {
     constructor(private readonly clientsService: ClientsService) {}
-
+    
     @Get()
+    @ApiQuery({ name: 'page', required: true })
+    @ApiQuery({ name: 'limit', required: true })
     @ApiOkResponse({ type: [ClientDto] })
-    findAll(): Promise<ClientDto[]> {
-        return this.clientsService.findAll();
+    findAll(
+        @Query('page', new ParseIntPipe()) page: number,
+        @Query('limit', new ParseIntPipe()) limit: number,
+    ): Promise<ClientDto[]> {
+        return this.clientsService.findAll(page, limit);
     }
 
     @Get(':id')

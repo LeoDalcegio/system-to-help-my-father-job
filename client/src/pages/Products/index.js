@@ -44,27 +44,23 @@ export default function Products({ history }) {
 
     const classes = useStyles();
 
-    async function loadProducts() {
+    const loadProducts = async (page, limit) => {
         const response = await api.get("/products", {
             params: {
                 productCode,
                 productDescription,
-                page: 0,
-                limit: 15
+                page,
+                limit
             },
         });
 
         setProducts(response.data);
     }
 
-    useEffect(() => {
-        loadProducts();
-    }, []);
-
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        loadProducts();
+        loadProducts(0, 15);
     }
 
     return (
@@ -104,7 +100,7 @@ export default function Products({ history }) {
                 </div>
             </form>
 
-            <DefaultTable columns={columns} rows={products} />
+            <DefaultTable columns={columns} rows={products} loadData={loadProducts} />
         </div>
     );
 }

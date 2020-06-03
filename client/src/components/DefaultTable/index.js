@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -25,9 +25,13 @@ const useStyles = makeStyles({
     }
 });
 
-export default function DefaultTable({ columns, rows }) {
+export default function DefaultTable({ columns, rows, loadData }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    useEffect(() => {
+        loadData(page, rowsPerPage)
+    }, [page, rowsPerPage])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);

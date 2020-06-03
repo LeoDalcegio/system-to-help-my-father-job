@@ -5,7 +5,7 @@ import { setupSwagger } from './swagger';
 import helmet from 'helmet';
 
 async function bootstrap() {
-    const PORT = 3000 || process.env.PORT;
+    const PORT = 3333 || process.env.PORT;
 
     const app = await NestFactory.create(AppModule);
 

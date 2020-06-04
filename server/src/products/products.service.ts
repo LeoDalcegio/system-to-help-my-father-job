@@ -28,11 +28,13 @@ export class ProductsService {
             where['productDescription'] = productDescription
         }
 
+        page++;
+
         const products = await this.productsRepository.findAll<Product>({
             where,
             order: ['id'],
-            limit: limit,
-            offset: page,
+            limit,
+            offset: (limit * page) - limit,
         });
 
         return products.map(product => new ProductDto(product)); // verificar se isso é necessário

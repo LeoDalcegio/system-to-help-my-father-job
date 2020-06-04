@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,10 +10,6 @@ import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import './styles.css';
-
-function createData(id, productCode, productDescription, type, observation) {
-    return { id, productCode, productDescription, type, observation };
-}
 
 const useStyles = makeStyles({
     table: {
@@ -62,9 +58,9 @@ export default function DefaultTable({ columns, rows, loadData }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        {rows.slice().map((row) => {
                             return (
-                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                     {columns.map((column) => {
                                         const value = row[column.id];
 
@@ -83,7 +79,7 @@ export default function DefaultTable({ columns, rows, loadData }) {
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={rows.length}
+                count={-1}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}

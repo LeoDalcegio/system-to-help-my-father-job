@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import DefaultTable from "../../components/DefaultTable";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
@@ -60,7 +60,7 @@ export default function Products({ history }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        loadProducts(0, 15);
+        loadProducts(0, 10);
     }
 
     return (

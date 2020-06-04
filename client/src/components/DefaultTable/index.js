@@ -8,6 +8,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import './styles.css';
 
 const useStyles = makeStyles({
@@ -38,6 +42,17 @@ export default function DefaultTable({ columns, rows, loadData }) {
     };
 
     const classes = useStyles();
+    
+    const editAndDeleteIcons = (
+        <>
+            <IconButton onClick={console.log("delete")}>
+                <DeleteIcon color="secondary" />
+            </IconButton>
+            <IconButton onClick={console.log("edited")}>
+                <EditIcon color="primary" />
+            </IconButton>
+        </>
+    );
 
     return (
         <Paper className={classes.root}>
@@ -49,7 +64,10 @@ export default function DefaultTable({ columns, rows, loadData }) {
                                 <TableCell
                                     key={column.id}
                                     align={column.align}
-                                    style={{ minWidth: column.minWidth }}
+                                    style={{ 
+                                        minWidth: column.minWidth,
+                                        maxWidth: column.maxWidth,
+                                    }}
                                 >
                                     {column.label}
                                 </TableCell>
@@ -59,15 +77,20 @@ export default function DefaultTable({ columns, rows, loadData }) {
                     <TableBody>
                         {rows.slice().map((row) => {
                             return (
-                                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}> 
                                     {columns.map((column) => {
-                                        const value = row[column.id];
-
+                                        const value = row[column.id];                                        
                                         return (
                                             <TableCell key={column.id} align={column.align}>
-                                                {column.format && typeof value === 'number' ? column.format(value) : value}
-                                            </TableCell>
-                                        );
+                                                {
+                                                    column.id === 'actions' 
+                                                ?
+                                                    editAndDeleteIcons
+                                                :                                                     
+                                                    column.format && typeof value === 'number' ? column.format(value) : value                                                
+                                                }
+                                            </TableCell>                                            
+                                        );                                        
                                     })}
                                 </TableRow>
                             );

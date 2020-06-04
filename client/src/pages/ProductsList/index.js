@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
+import AddIcon from "@material-ui/icons/Add";
 
 import api from "../../services/api";
 
@@ -12,10 +13,15 @@ import "./styles.css";
 const useStyles = makeStyles((theme) => ({
     root: {
         "& .MuiTextField-root, .MuiButton-root": {
-            margin: theme.spacing(1),
+            marginBottom: theme.spacing(1),
+            marginRight: theme.spacing(1),
         },
     },
+    button: {
+        marginTop: theme.spacing(1),
+    }
 }));
+
 
 const columns = [
     { id: "id", label: "Id", maxWidth: 20 },
@@ -79,6 +85,7 @@ export default function ProductsList({ history }) {
                         variant="outlined"
                         value={productCode}
                         onChange={(event) => setProductCode(event.target.value)}
+                        size="small"
                     />
                     <TextField
                         id="outlined-search"
@@ -87,11 +94,11 @@ export default function ProductsList({ history }) {
                         variant="outlined"
                         value={productDescription}
                         onChange={(event) => setProductDescription(event.target.value)}
+                        size="small"
                     />
                     <Button
                         variant="contained"
                         color="primary"
-                        className={classes.button}
                         startIcon={<SearchIcon />}
                         type="submit"
                     >
@@ -101,6 +108,14 @@ export default function ProductsList({ history }) {
             </form>
 
             <DefaultTable columns={columns} rows={products} loadData={loadProducts} />
+            <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<AddIcon />}
+            >
+                Incluir
+            </Button>
         </div>
     );
 }

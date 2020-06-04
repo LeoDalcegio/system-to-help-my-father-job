@@ -1,49 +1,98 @@
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import SearchIcon from "@material-ui/icons/Search";
+import AddIcon from "@material-ui/icons/Add";
+import { makeStyles } from '@material-ui/core/styles';
 
 import api from "../../services/api";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'column'
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: '25ch',
+  },
+  button: {
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(1),
+  }
+}));
 
 export default function ProductsForm({ history }) {
     const [productCode, setProductCode] = useState('');
     const [productDescription, setProductDescription] = useState('');
-
+    
+    const classes = useStyles();
+    
     const handleSubmit = (e) => {
         e.preventDefault();    
     }
 
     return (
-        <div className="products-form-container">
+        <div className={"products-form-container"}>
             <form
                 noValidate 
                 autoComplete="off"
                 onSubmit={handleSubmit}
+                className={classes.root}
             >
-                <div className="products-list-search">
+                <div className="products-form-inputs">
                     <TextField
-                        id="outlined-search"
-                        label="Código do produto..."
-                        type="search"
-                        variant="outlined"
-                        value={productCode}
-                        onChange={(event) => setProductCode(event.target.value)}
+                        id="standard"
+                        label="Produto"
+                        style={{ margin: 8 }}
+                        placeholder="Código do produto"
+                        margin="normal"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     <TextField
-                        id="outlined-search"
-                        label="Descrição do produto..."
-                        type="search"
-                        variant="outlined"
-                        value={productDescription}
-                        onChange={(event) => setProductDescription(event.target.value)}
+                        id="standard"
+                        label="Descrição"
+                        style={{ margin: 8 }}
+                        placeholder="Descrição do produto"
+                        margin="normal"
+                        fullWidth
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
+                    <TextField
+                        id="standard-full-width"
+                        label="Observação"
+                        style={{ margin: 8 }}
+                        placeholder="Observação do produto"
+                        fullWidth
+                        margin="normal"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    
                     <Button
                         variant="contained"
                         color="primary"
-                        startIcon={<SearchIcon />}
+                        startIcon={<AddIcon />}
                         type="submit"
+                        className={classes.button}
                     >
-                        Buscar
+                        Incluir
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AddIcon />}
+                        type="submit"
+                        className={classes.button}
+                    >
+                        Voltar
                     </Button>
                 </div>
             </form>

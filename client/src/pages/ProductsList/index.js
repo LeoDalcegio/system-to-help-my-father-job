@@ -208,6 +208,7 @@ export default function ProductsList({ history }) {
                 color="primary"
                 className={classes.button}
                 startIcon={<AddIcon />}
+                onClick={() => history.push('/products-form')}
             >
                 Incluir
             </Button>

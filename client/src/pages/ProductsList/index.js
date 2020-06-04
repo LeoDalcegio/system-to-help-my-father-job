@@ -37,7 +37,7 @@ const columns = [
     },
 ];
 
-export default function Products({ history }) {
+export default function ProductsList({ history }) {
     const [products, setProducts] = useState([]);
     const [productCode, setProductCode] = useState('');
     const [productDescription, setProductDescription] = useState('');
@@ -64,14 +64,14 @@ export default function Products({ history }) {
     }
 
     return (
-        <div className="products-container">
+        <div className="products-list-container">
             <form 
                 className={classes.root}
                 noValidate 
                 autoComplete="off"
                 onSubmit={handleSubmit}
             >
-                <div className="products-search">
+                <div className="products-list-search">
                     <TextField
                         id="outlined-search"
                         label="Código do produto..."

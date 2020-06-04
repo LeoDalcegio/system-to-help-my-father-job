@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Header from './components/Header';
 import Login from './pages/Login'
-import Products from './pages/Products';
+import ProductsList from './pages/ProductsList';
+import ProductsForm from './pages/ProductsForm';
 
 export default function Routes() {
     return (
@@ -12,7 +13,8 @@ export default function Routes() {
                 <Route path='/' exact component={Login}/>
 
                 <Header>
-                    <Route path='/products' component={Products}/>
+                    <Route path='/products-list' component={ProductsList}/>
+                    <Route path='/products-form' component={ProductsForm}/>
                 </Header>
             </Switch>
         </BrowserRouter>

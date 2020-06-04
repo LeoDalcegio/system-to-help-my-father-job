@@ -144,12 +144,12 @@ export default function Header({ children }) {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button component={Link} to="/products">
+                    <ListItem button component={Link} to="/products-list">
                         <ListItemIcon><DescriptionIcon /></ListItemIcon>
                         <ListItemText primary='Produtos' />
                     </ListItem>
 
-                    <ListItem button component={Link} to="/clients">
+                    <ListItem button component={Link} to="/clients-list">
                         <ListItemIcon><PeopleIcon /></ListItemIcon>
                         <ListItemText primary='Clientes' />
                     </ListItem>

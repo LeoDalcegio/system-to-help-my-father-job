@@ -91,7 +91,7 @@ export class UsersService {
             );
         }
 
-        const token = await this.signToken(user);
+        const token = 'Bearer ' + await this.signToken(user);
         return new UserLoginResponseDto(user, token);
     }
 
@@ -126,3 +126,4 @@ export class UsersService {
         return sign(payload, this.jwtPrivateKey, {});
     }
 }
+

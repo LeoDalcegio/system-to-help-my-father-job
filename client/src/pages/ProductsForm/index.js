@@ -3,6 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 
 import api from "../../services/api";
 
@@ -23,14 +24,32 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ProductsForm({ history }) {
+export default function ProductsForm() {
     const [productCode, setProductCode] = useState('');
     const [productDescription, setProductDescription] = useState('');
+    const [observation, setObservation] = useState('');
+
+    const history = useHistory();
     
     const classes = useStyles();
     
-    const handleSubmit = (e) => {
-        e.preventDefault();    
+    const handleSubmit = async (e) => {
+        e.preventDefault(); 
+
+        const token = localStorage.getItem('token');
+        
+        await api.post('/products', {
+            productCode,
+            productDescription,
+            observation,
+            type: 'M'
+        },{
+            params: {
+                authorization: token
+            }
+        })
+        
+        history.push('/products-list')
     }
 
     return (
@@ -47,6 +66,8 @@ export default function ProductsForm({ history }) {
                         label="Produto"
                         style={{ margin: 8 }}
                         placeholder="Código do produto"
+                        value={productCode}
+                        onChange={(event) => setProductCode(event.target.value)}
                         margin="normal"
                         className={classes.textField}
                         InputLabelProps={{
@@ -58,6 +79,8 @@ export default function ProductsForm({ history }) {
                         label="Descrição"
                         style={{ margin: 8 }}
                         placeholder="Descrição do produto"
+                        value={productDescription}
+                        onChange={(event) => setProductDescription(event.target.value)}
                         margin="normal"
                         fullWidth
                         InputLabelProps={{
@@ -68,6 +91,8 @@ export default function ProductsForm({ history }) {
                         id="standard-full-width"
                         label="Observação"
                         style={{ margin: 8 }}
+                        value={observation}
+                        onChange={(event) => setObservation(event.target.value)}
                         placeholder="Observação do produto"
                         fullWidth
                         margin="normal"

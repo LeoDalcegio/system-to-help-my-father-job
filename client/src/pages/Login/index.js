@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import api from '../../services/api';
+import { useHistory } from 'react-router-dom';
 
 import './styles.css';
 
-export default function Login({ history }) {    
+export default function Login() {    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const history = useHistory();
 
     async function handleSubmit(e){
         e.preventDefault();
@@ -17,17 +20,13 @@ export default function Login({ history }) {
                 email,
                 password
             });
-            
-            if(response.status !== 201){
-                return;
-            }
-            
-            const { authorization } = response.data;
+
+            const { token } = response.data;
 
             localStorage.setItem('email', email);
-            localStorage.setItem('authorization', authorization);
+            localStorage.setItem('token', token);
 
-            history.push('/products')
+            history.push('/products-list')
         }
     }
 

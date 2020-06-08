@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 import AddButton from '../../components/AddButton'
 import BackButton from '../../components/BackButton'
@@ -23,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: '25ch',
   }
 }));
 
@@ -30,6 +39,7 @@ export default function ProductsForm({ id = 0 }) {
     const [productCode, setProductCode] = useState('');
     const [productDescription, setProductDescription] = useState('');
     const [observation, setObservation] = useState('');
+    const [type, setType] = useState('');
 
     const history = useHistory();
     
@@ -44,7 +54,7 @@ export default function ProductsForm({ id = 0 }) {
             productCode,
             productDescription,
             observation,
-            type: 'M'
+            type
         },{
             headers: {
                 authorization: token
@@ -70,7 +80,6 @@ export default function ProductsForm({ id = 0 }) {
             >
                 <div className="products-form-inputs">
                     <TextField
-                        id="standard"
                         label="Produto"
                         style={{ margin: 8 }}
                         placeholder="Código do produto"
@@ -83,7 +92,6 @@ export default function ProductsForm({ id = 0 }) {
                         }}
                     />
                     <TextField
-                        id="standard"
                         label="Descrição"
                         style={{ margin: 8 }}
                         placeholder="Descrição do produto"
@@ -95,8 +103,19 @@ export default function ProductsForm({ id = 0 }) {
                             shrink: true,
                         }}
                     />
+
+                    <FormControl className={classes.formControl}>
+                        <InputLabel>Tipo</InputLabel>
+                            <Select
+                                value={type}
+                                onChange={(event) => setType(event.target.value)}
+                            >
+                            <MenuItem value={'M'}>Malha</MenuItem>
+                            <MenuItem value={'F'}>Fio</MenuItem>
+                        </Select>
+                    </FormControl>
+
                     <TextField
-                        id="standard-full-width"
                         label="Observação"
                         style={{ margin: 8 }}
                         value={observation}

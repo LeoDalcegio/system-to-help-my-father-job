@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     }
 });
 
-export default function DefaultTable({ columns, rows, loadData }) {
+export default function DefaultTable({ columns, rows, loadData, deleteData, updateData }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -43,12 +43,12 @@ export default function DefaultTable({ columns, rows, loadData }) {
 
     const classes = useStyles();
     
-    const editAndDeleteIcons = (
+    const editAndDeleteIcons = (id) => (
         <>
-            <IconButton onClick={console.log("delete")}>
+            <IconButton onClick={async () => await deleteData(id)}>
                 <DeleteIcon color="secondary" />
             </IconButton>
-            <IconButton onClick={console.log("edited")}>
+            <IconButton onClick={async () => await updateData(id)}>
                 <EditIcon color="primary" />
             </IconButton>
         </>
@@ -85,7 +85,7 @@ export default function DefaultTable({ columns, rows, loadData }) {
                                                 {
                                                     column.id === 'actions' 
                                                 ?
-                                                    editAndDeleteIcons
+                                                    editAndDeleteIcons(row.id)
                                                 :                                                     
                                                     column.format && typeof value === 'number' ? column.format(value) : value                                                
                                                 }

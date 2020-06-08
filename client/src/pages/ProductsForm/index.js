@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+
+import AddButton from '../../components/AddButton'
+import BackButton from '../../components/BackButton'
+import EditButton from '../../components/EditButton'
 
 import api from "../../services/api";
 
@@ -24,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ProductsForm() {
+export default function ProductsForm({ id = 0 }) {
     const [productCode, setProductCode] = useState('');
     const [productDescription, setProductDescription] = useState('');
     const [observation, setObservation] = useState('');
@@ -35,19 +37,25 @@ export default function ProductsForm() {
     
     const handleSubmit = async (e) => {
         e.preventDefault(); 
-
+        
         const token = localStorage.getItem('token');
         
-        await api.post('/products', {
+        const data = [{
             productCode,
             productDescription,
             observation,
             type: 'M'
         },{
-            params: {
+            headers: {
                 authorization: token
             }
-        })
+        }]
+
+        if(id > 0){
+            await api.put(`/products/${id}`, data);
+        }else{
+            await api.post('/products', data);
+        }
         
         history.push('/products-list')
     }
@@ -101,24 +109,13 @@ export default function ProductsForm() {
                         }}
                     />
                     
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AddIcon />}
-                        type="submit"
-                        className={classes.button}
-                    >
-                        Incluir
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AddIcon />}
-                        type="submit"
-                        className={classes.button}
-                    >
-                        Voltar
-                    </Button>
+                    {   id > 0 
+                        ?
+                        <EditButton className={classes.button} />                    
+                        :
+                        <AddButton className={classes.button} />
+                    }
+                    <BackButton className={classes.button} />
                 </div>
             </form>
         </div>

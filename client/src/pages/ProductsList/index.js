@@ -73,6 +73,14 @@ export default function ProductsList() {
         await loadProducts(0, 10);
     }
 
+    const deleteData = async (id) => {
+        await api.delete(`/products/${id}`);
+    }
+    
+    const updateData = async (id) => {
+        history.push('products-form', id)
+    }
+
     return (
         <div className="products-list-container">
             <form 
@@ -111,7 +119,7 @@ export default function ProductsList() {
                 </div>
             </form>
 
-            <DefaultTable columns={columns} rows={products} loadData={loadProducts} />
+            <DefaultTable columns={columns} rows={products} loadData={loadProducts} deleteData={deleteData} updateData={updateData}/>
             <Button
                 variant="contained"
                 color="primary"

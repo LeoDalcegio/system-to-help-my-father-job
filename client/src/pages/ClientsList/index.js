@@ -25,17 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
     { id: "id", label: "Id", maxWidth: 10 },
-    { id: "productCode", label: "Código do produto", minWidth: 100 },
-    {
-        id: "productDescription",
-        label: "Descrição do produto",
-        minWidth: 170,
-    },
-    {
-        id: "type",
-        label: "Tipo",
-        minWidth: 50,
-    },
+    { id: "name", label: "Nome", minWidth: 100 },
     {
         id: "observation",
         label: "Observação",
@@ -45,80 +35,69 @@ const columns = [
 
 ];
 
-export default function ProductsList() {
-    const [products, setProducts] = useState([]);
-    const [productCode, setProductCode] = useState('');
-    const [productDescription, setProductDescription] = useState('');
-    
+export default function ClientsList() {
+    const [clients, setClients] = useState([]);
+    const [name, setName] = useState('');
+
     const history = useHistory();
 
     const classes = useStyles();
 
-    const loadProducts = async (page, limit) => {
-        const response = await api.get("/products", {
+    const loadClients = async (page, limit) => {
+        const response = await api.get("/clients", {
             params: {
-                productCode,
-                productDescription,
+                name,
                 page,
                 limit
             },
         });
 
-        setProducts(response.data);
+        setClients(response.data);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        await loadProducts(0, 10);
+        await loadClients(0, 10);
     }
 
     const deleteData = async (id) => {
         const token = localStorage.getItem('token');
 
-        const response = await api.delete(`/products/${id}`, {
+        const response = await api.delete(`/clients/${id}`, {
             headers: {
                 authorization: token
             }
         });
  
         if(response.status === 200){
-            setProducts(products.filter(product => product.id !== id));
+            setClients(clients.filter(client => client.id !== id));
         }
     }
     
     const updateData = async (id) => {
 
-        history.push('products-form', {
+        history.push('clients-form', {
             id
         })
     }
 
     return (
-        <div className="products-list-container">
+        <div className="clients-list-container">
             <form 
                 className={classes.root}
                 noValidate 
                 autoComplete="off"
                 onSubmit={handleSubmit}
             >
-                <div className="products-list-search">
+                <div className="clients-list-search">
                     <TextField
                         id="outlined-search"
-                        label="Código do produto..."
+                        label="Nome do cliente..."
                         type="search"
                         variant="outlined"
-                        value={productCode}
-                        onChange={(event) => setProductCode(event.target.value)}
-                        size="small"
-                    />
-                    <TextField
-                        id="outlined-search"
-                        label="Descrição do produto..."
-                        type="search"
-                        variant="outlined"
-                        value={productDescription}
-                        onChange={(event) => setProductDescription(event.target.value)}
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
                         size="small"
                     />
                     <Button
@@ -132,13 +111,13 @@ export default function ProductsList() {
                 </div>
             </form>
 
-            <DefaultTable columns={columns} rows={products} loadData={loadProducts} deleteData={deleteData} updateData={updateData}/>
+            <DefaultTable columns={columns} rows={clients} loadData={loadClients} deleteData={deleteData} updateData={updateData}/>
             <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 startIcon={<AddIcon />}
-                onClick={() => history.push('/products-form')}
+                onClick={() => history.push('/clients-form')}
             >
                 Incluir
             </Button>

@@ -43,7 +43,7 @@ export default function DefaultTable({ columns, rows, loadData, deleteData, upda
 
     const classes = useStyles();
     
-    const editAndDeleteIcons = (id) => (
+    const editAndDeleteIcons = (id)  => (
         <>
             <IconButton onClick={async () => await deleteData(id)}>
                 <DeleteIcon color="secondary" />
@@ -53,7 +53,7 @@ export default function DefaultTable({ columns, rows, loadData, deleteData, upda
             </IconButton>
         </>
     );
-
+        
     return (
         <Paper className={classes.root}>
             <TableContainer className={classes.container}>

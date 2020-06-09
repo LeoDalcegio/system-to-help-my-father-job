@@ -14,11 +14,21 @@ export class ClientsService {
     async findAll(
         page: number,
         limit: number = 15,
+        name?: string
     ) {
+        let where = { };
+
+        if (name) {
+            where['name'] = name
+        }
+
+        page++;
+
         const clients = await this.clientsRepository.findAll<Client>({
+            where,
             order: ['id'],
-            limit: limit,
-            offset: page,
+            limit,
+            offset: (limit * page) - limit,
         });
 
         return clients.map(client => new ClientDto(client)); // verificar se isso é necessário

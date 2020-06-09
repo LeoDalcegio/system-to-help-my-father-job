@@ -34,11 +34,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ProductsForm() {
-    const [productCode, setProductCode] = useState('');
-    const [productDescription, setProductDescription] = useState('');
+export default function ClientsForm() {
+    const [name, setName] = useState('');
     const [observation, setObservation] = useState('');
-    const [type, setType] = useState('');
 
     const location = useLocation();
     const id = location?.state?.id;
@@ -48,15 +46,12 @@ export default function ProductsForm() {
     const classes = useStyles();
 
     useEffect(() => {
-        console.log(id)
         if(id > 0){
-            api.get(`/products/${id}`).then(response => {
-                const { productCode, productDescription, observation, type } = response.data;
+            api.get(`/clients/${id}`).then(response => {
+                const { name, observation } = response.data;
 
-                setProductCode(productCode);
-                setProductDescription(productDescription);
+                setName(name);
                 setObservation(observation);
-                setType(type);
             });
         }
     }, [])
@@ -67,10 +62,8 @@ export default function ProductsForm() {
         const token = localStorage.getItem('token');
         
         const data = {
-            productCode,
-            productDescription,
+            name,
             observation,
-            type
         };
 
         const header = {
@@ -80,65 +73,42 @@ export default function ProductsForm() {
         }
 
         if(id > 0){
-            await api.put(`/products/${id}`, data, header);
+            await api.put(`/clients/${id}`, data, header);
         }else{
-            await api.post('/products', data, header);
+            await api.post('/clients', data, header);
         }
         
-        history.push('/products-list')
+        history.push('/clients-list')
     }
 
     return (
-        <div className={"products-form-container"}>
+        <div className={"clients-form-container"}>
             <form
                 noValidate 
                 autoComplete="off"
                 onSubmit={handleSubmit}
                 className={classes.root}
             >
-                <div className="products-form-inputs">
+                <div className="cliets-form-inputs">
                     <TextField
-                        label="Produto"
+                        label="Nome"
                         style={{ margin: 8 }}
-                        placeholder="Código do produto"
-                        value={productCode}
-                        onChange={(event) => setProductCode(event.target.value)}
+                        placeholder="Nome do cliente"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
                         margin="normal"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                     />
-                    <TextField
-                        label="Descrição"
-                        style={{ margin: 8 }}
-                        placeholder="Descrição do produto"
-                        value={productDescription}
-                        onChange={(event) => setProductDescription(event.target.value)}
-                        margin="normal"
-                        fullWidth
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-
-                    <FormControl className={classes.formControl}>
-                        <InputLabel>Tipo</InputLabel>
-                            <Select
-                                value={type}
-                                onChange={(event) => setType(event.target.value)}
-                            >
-                            <MenuItem value={'M'}>Malha</MenuItem>
-                            <MenuItem value={'F'}>Fio</MenuItem>
-                        </Select>
-                    </FormControl>
 
                     <TextField
                         label="Observação"
                         style={{ margin: 8 }}
                         value={observation}
                         onChange={(event) => setObservation(event.target.value)}
-                        placeholder="Observação do produto"
+                        placeholder="Observação do cliente"
                         fullWidth
                         margin="normal"
                         InputLabelProps={{
@@ -152,7 +122,7 @@ export default function ProductsForm() {
                         :
                         <AddButton className={classes.button} />
                     }
-                    <BackButton className={classes.button} onClick={() => history.push('/products-list')}/>
+                    <BackButton className={classes.button} onClick={() => history.push('/clients-list')}/>
                 </div>
             </form>
         </div>

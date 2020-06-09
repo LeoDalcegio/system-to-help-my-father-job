@@ -33,12 +33,14 @@ export class ClientsController {
     @Get()
     @ApiQuery({ name: 'page', required: true })
     @ApiQuery({ name: 'limit', required: true })
+    @ApiQuery({ name: 'name', required: true })
     @ApiOkResponse({ type: [ClientDto] })
     findAll(
         @Query('page', new ParseIntPipe()) page: number,
         @Query('limit', new ParseIntPipe()) limit: number,
+        @Query('name') name: string,
     ): Promise<ClientDto[]> {
-        return this.clientsService.findAll(page, limit);
+        return this.clientsService.findAll(page, limit, name);
     }
 
     @Get(':id')

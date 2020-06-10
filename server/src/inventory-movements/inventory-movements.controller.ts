@@ -20,7 +20,6 @@ import {
 import { CreateInventoryMovementDto } from './dto/create-inventory-movement.dto'; // leo
 import { AuthGuard } from '@nestjs/passport';
 import { InventoryMovement as InventoryMovementEntity } from './inventory-movement.entity';
-import { InventoryMovementDto } from './dto/inventory-movement.dto';
 import { InventoryMovementsService } from './inventory-movements.service';
 import { UpdateInventoryMovementDto } from './dto/update-inventory-movement.dto';
 import { BalanceInventoryMovementDto } from './dto/balance-inventory-movement.dto';
@@ -32,13 +31,13 @@ export class InventoryMovementsController {
     constructor(private readonly inventoryMovementsService: InventoryMovementsService) {}
 
     @Get()
-    @ApiOkResponse({ type: [InventoryMovementDto] })
+    @ApiOkResponse({ type: [InventoryMovementEntity] })
     @ApiQuery({ name: 'page', required: true })
     @ApiQuery({ name: 'limit', required: true })
     findAll(
         @Query('page', new ParseIntPipe()) page: number,
         @Query('limit', new ParseIntPipe()) limit: number,
-    ): Promise<InventoryMovementDto[]> {
+    ): Promise<InventoryMovementEntity[]> {
         return this.inventoryMovementsService.findAll(page, limit);
     }
 
@@ -54,9 +53,9 @@ export class InventoryMovementsController {
     }
 
     @Get(':id')
-    @ApiOkResponse({ type: InventoryMovementDto })
+    @ApiOkResponse({ type: InventoryMovementEntity })
     @ApiParam({ name: 'id', required: true })
-    findOne(@Param('id', new ParseIntPipe()) id: number): Promise<InventoryMovementDto> {
+    findOne(@Param('id', new ParseIntPipe()) id: number): Promise<InventoryMovementEntity> {
         return this.inventoryMovementsService.findOne(id);
     }
 
@@ -69,23 +68,23 @@ export class InventoryMovementsController {
     }
 
     @Put(':id')
-    @ApiOkResponse({ type: InventoryMovementDto })
+    @ApiOkResponse({ type: InventoryMovementEntity })
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     update(
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updateInventoryMovementDto: UpdateInventoryMovementDto,
-    ): Promise<InventoryMovementDto> {
+    ): Promise<InventoryMovementEntity> {
         return this.inventoryMovementsService.update(id, updateInventoryMovementDto);
     }
 
     @Delete(':id')
-    @ApiOkResponse({ type: InventoryMovementDto })
+    @ApiOkResponse({ type: InventoryMovementEntity })
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    delete(@Param('id', new ParseIntPipe()) id: number): Promise<InventoryMovementDto> {
+    delete(@Param('id', new ParseIntPipe()) id: number): Promise<InventoryMovementEntity> {
         return this.inventoryMovementsService.delete(id);
     }
 }

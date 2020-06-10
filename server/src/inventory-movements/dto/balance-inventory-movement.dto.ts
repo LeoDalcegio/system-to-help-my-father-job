@@ -1,8 +1,8 @@
-import { InventoryMovementDto } from './inventory-movement.dto';
+import { InventoryMovement } from '../inventory-movement.entity';
 
 export class BalanceInventoryMovementDto {
-    entry: InventoryMovementDto;
+    entry: InventoryMovement;
 
-    exits: InventoryMovementDto[];
+    exits: InventoryMovement[];
 }
 

@@ -1,7 +1,6 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from './product.entity';
-import { ProductDto } from './dto/product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
@@ -37,7 +36,7 @@ export class ProductsService {
             offset: (limit * page) - limit,
         });
 
-        return products.map(product => new ProductDto(product)); // verificar se isso é necessário
+        return products; // verificar se isso é necessário
     }
 
     async findOne(id: number) {
@@ -47,7 +46,7 @@ export class ProductsService {
             throw new HttpException('Produto não encontrado', HttpStatus.NOT_FOUND);
         }
 
-        return new ProductDto(product);
+        return product;
     }
 
     async create(createProductDto: CreateProductDto) {
@@ -76,7 +75,7 @@ export class ProductsService {
         try {
             const data = await product.save();
 
-            return new ProductDto(data);
+            return data;
         } catch (err) {
             throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -87,6 +86,6 @@ export class ProductsService {
 
         await product.destroy();
 
-        return new ProductDto(product);
+        return product;
     }
 }

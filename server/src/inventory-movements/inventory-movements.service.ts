@@ -1,6 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateInventoryMovementDto } from './dto/create-inventory-movement.dto';
-import { InventoryMovementDto } from './dto/inventory-movement.dto';
 import { UpdateInventoryMovementDto } from './dto/update-inventory-movement.dto';
 import { InventoryMovement } from './inventory-movement.entity';
 import { BalanceInventoryMovementDto } from './dto/balance-inventory-movement.dto';
@@ -19,13 +18,19 @@ export class InventoryMovementsService {
         page: number,
         limit: number = 15,
     ) {
-        const inventoryMovements = await this.inventoryMovementsRepository.findAndCountAll<InventoryMovement>({
+        let where = { };
+
+        page++;
+
+        const inventoryMovements: InventoryMovement[] = await this.inventoryMovementsRepository.findAll({
+            include: [Product, Client],
             order: ['id'],
             limit: limit,
             offset: page,
         });
 
-        return inventoryMovements.rows.map(inventoryMovement => new InventoryMovementDto(inventoryMovement)); // verificar se isso é necessário
+
+        return inventoryMovements; 
     }
 
     async findOne(id: number) {
@@ -35,7 +40,7 @@ export class InventoryMovementsService {
             throw new HttpException('Movimentação de estoque não encontrada', HttpStatus.NOT_FOUND);
         }
 
-        return new InventoryMovementDto(inventoryMovement);
+        return inventoryMovement;
     }
 
     async balance(
@@ -44,7 +49,7 @@ export class InventoryMovementsService {
     ): Promise<BalanceInventoryMovementDto[]> {
         const retObject: BalanceInventoryMovementDto[] = [];
 
-        const entries: InventoryMovementDto[] = await this.inventoryMovementsRepository.findAll({
+        const entries: InventoryMovement[] = await this.inventoryMovementsRepository.findAll({
             include: [Product, Client],
             where: {
                 type: InventoryMovementType.ENTRY
@@ -55,7 +60,7 @@ export class InventoryMovementsService {
         });
 
         for(const entry of entries){
-            const exits: InventoryMovementDto[] = await this.inventoryMovementsRepository.findAll({
+            const exits: InventoryMovement[] = await this.inventoryMovementsRepository.findAll({
                 include: [Product, Client],
                 where: {
                     type: InventoryMovementType.EXIT,
@@ -105,7 +110,7 @@ export class InventoryMovementsService {
         try {
             const data = await inventoryMovement.save();
 
-            return new InventoryMovementDto(data);
+            return data;
         } catch (err) {
             throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -116,6 +121,6 @@ export class InventoryMovementsService {
 
         await inventoryMovement.destroy();
 
-        return new InventoryMovementDto(inventoryMovement);
+        return inventoryMovement;
     }
 }

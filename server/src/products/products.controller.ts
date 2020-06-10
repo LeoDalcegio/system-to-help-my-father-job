@@ -22,7 +22,6 @@ import { CreateProductDto } from './dto/create-product.dto'; // leo
 import { ProductsService } from './products.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Product as ProductEntity } from './product.entity';
-import { ProductDto } from './dto/product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
@@ -31,7 +30,7 @@ export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
 
     @Get()
-    @ApiOkResponse({ type: [ProductDto] })
+    @ApiOkResponse({ type: [ProductEntity] })
     @ApiQuery({ name: 'page', required: true })
     @ApiQuery({ name: 'limit', required: true })
     @ApiQuery({ name: 'productCode', required: false })
@@ -42,14 +41,14 @@ export class ProductsController {
         @Query('productCode') productCode: string,
         @Query('productDescription') productDescription: string,
         )
-        : Promise<ProductDto[]> {
+        : Promise<ProductEntity[]> {
         return this.productsService.findAll(page, limit, productCode, productDescription);
     }
 
     @Get(':id')
-    @ApiOkResponse({ type: ProductDto })
+    @ApiOkResponse({ type: ProductEntity })
     @ApiParam({ name: 'id', required: true })
-    findOne(@Param('id', new ParseIntPipe()) id: number): Promise<ProductDto> {
+    findOne(@Param('id', new ParseIntPipe()) id: number): Promise<ProductEntity> {
         return this.productsService.findOne(id);
     }
 
@@ -62,23 +61,23 @@ export class ProductsController {
     }
 
     @Put(':id')
-    @ApiOkResponse({ type: ProductDto })
+    @ApiOkResponse({ type: ProductEntity })
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     update(
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updateProductDto: UpdateProductDto,
-    ): Promise<ProductDto> {
+    ): Promise<ProductEntity> {
         return this.productsService.update(id, updateProductDto);
     }
 
     @Delete(':id')
-    @ApiOkResponse({ type: ProductDto })
+    @ApiOkResponse({ type: ProductEntity })
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    delete(@Param('id', new ParseIntPipe()) id: number): Promise<ProductDto> {
+    delete(@Param('id', new ParseIntPipe()) id: number): Promise<ProductEntity> {
         return this.productsService.delete(id);
     }
 }

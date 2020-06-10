@@ -1,7 +1,6 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { Client } from './client.entity';
-import { ClientDto } from './dto/client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 
 @Injectable()
@@ -31,7 +30,7 @@ export class ClientsService {
             offset: (limit * page) - limit,
         });
 
-        return clients.map(client => new ClientDto(client)); // verificar se isso é necessário
+        return clients;
     }
 
     async findOne(id: number) {
@@ -41,7 +40,7 @@ export class ClientsService {
             throw new HttpException('Cliente não encontrado', HttpStatus.NOT_FOUND);
         }
 
-        return new ClientDto(client);
+        return client;
     }
 
     async create(createClientDto: CreateClientDto) {
@@ -66,7 +65,7 @@ export class ClientsService {
         try {
             const data = await client.save();
 
-            return new ClientDto(data);
+            return data;
         } catch (err) {
             throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -77,6 +76,6 @@ export class ClientsService {
 
         await client.destroy();
 
-        return new ClientDto(client);
+        return client;
     }
 }

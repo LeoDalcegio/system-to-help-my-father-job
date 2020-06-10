@@ -153,7 +153,7 @@ export default function Header({ children }) {
                         <ListItemIcon><PeopleIcon /></ListItemIcon>
                         <ListItemText primary='Clientes' />
                     </ListItem>
-                    <ListItem button component={Link} to="/inventory">
+                    <ListItem button component={Link} to="/inventory-movements-list">
                         <ListItemIcon><BusinessIcon /></ListItemIcon>
                         <ListItemText primary='Estoque' />
                     </ListItem>

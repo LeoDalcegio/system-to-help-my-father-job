@@ -48,7 +48,6 @@ export default function ProductsForm() {
     const classes = useStyles();
 
     useEffect(() => {
-        console.log(id)
         if(id > 0){
             api.get(`/products/${id}`).then(response => {
                 const { productCode, productDescription, observation, type } = response.data;
@@ -59,7 +58,7 @@ export default function ProductsForm() {
                 setType(type);
             });
         }
-    }, [])
+    }, [id])
     
     const handleSubmit = async (e) => {
         e.preventDefault(); 

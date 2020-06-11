@@ -24,18 +24,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-    { id: "id", label: "Id", maxWidth: 10 },
+    { id: "id", label: "Id",  align: 'right' },
+    { id: "movementDate", label: "Data", align: 'right' },
+    { id: "noteNumber", label: "Número da Nota", align: 'right' },
+    { id: "type", label: "Tipo", align: 'left' },
+    { id: "productCode", label: "Código do Produto", align: 'left' },
+    { id: "productDescription", label: "Descrição do Produto", align: 'left' },
+    { id: "client", label: "Cliente",  align: 'left' },
+    { id: "quantity", label: "Quantidade", align: 'right' },
     {
         id: "observation",
         label: "Observação",
-        minWidth: 170,
+        align: 'left'
     },
-    { id: "actions", label: "Ações", padding: 10},
-
+    { id: "actions", label: "Ações", align: 'right'},
 ];
 
 export default function InventoryMovementsList() {
-    const [observation, setObservation] = useState([]);
     const [inventoryMovements, setInventoryMovements] = useState([])
 
     const history = useHistory();

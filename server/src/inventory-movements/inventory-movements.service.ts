@@ -6,6 +6,7 @@ import { BalanceInventoryMovementDto } from './dto/balance-inventory-movement.dt
 import { InventoryMovementType } from '../shared/enum/inventory-movement-type.enums';
 import { Client } from '../clients/client.entity';
 import { Product } from '../products/product.entity';
+import { InventoryMovementDto } from './dto/inventory-movement.dto';
 
 @Injectable()
 export class InventoryMovementsService {
@@ -30,11 +31,18 @@ export class InventoryMovementsService {
         });
 
 
-        return inventoryMovements; 
+        return inventoryMovements.map(inventoryMovement => new InventoryMovementDto(inventoryMovement));
     }
 
     async findOne(id: number) {
-        const inventoryMovement = await this.inventoryMovementsRepository.findByPk<InventoryMovement>(id);
+        let where = { };
+
+        where['id'] = id;
+
+        const inventoryMovement: InventoryMovement = await this.inventoryMovementsRepository.findOne({
+            include: [Product, Client],
+            where
+        });
 
         if (!inventoryMovement) {
             throw new HttpException('Movimentação de estoque não encontrada', HttpStatus.NOT_FOUND);

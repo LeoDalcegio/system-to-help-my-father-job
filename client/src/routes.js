@@ -8,6 +8,7 @@ import ProductsForm from './pages/ProductsForm';
 import ClientsList from './pages/ClientsList';
 import ClientsForm from './pages/ClientsForm';
 import InventoryMovementsList from './pages/InventoryMovementsList';
+import InventoryMovementsForm from './pages/InventoryMovementsForm';
 
 export default function Routes() {
     return (
@@ -21,6 +22,7 @@ export default function Routes() {
                     <Route path='/clients-list' component={ClientsList}/>
                     <Route path='/clients-form' component={ClientsForm}/>
                     <Route path='/inventory-movements-list' component={InventoryMovementsList}/>
+                    <Route path='/inventory-movements-form' component={InventoryMovementsForm}/>                    
                 </Header>
             </Switch>
         </BrowserRouter>

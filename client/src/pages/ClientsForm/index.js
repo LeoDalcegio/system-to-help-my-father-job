@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 
 import AddButton from '../../components/AddButton'
 import BackButton from '../../components/BackButton'
@@ -54,7 +50,7 @@ export default function ClientsForm() {
                 setObservation(observation);
             });
         }
-    }, [])
+    }, [id])
     
     const handleSubmit = async (e) => {
         e.preventDefault(); 

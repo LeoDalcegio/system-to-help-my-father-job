@@ -67,6 +67,7 @@ export default function DefaultTable({ columns, rows, loadData, deleteData, upda
                                     style={{ 
                                         minWidth: column.minWidth,
                                         maxWidth: column.maxWidth,
+                                        padding: column.padding,
                                     }}
                                 >
                                     {column.label}

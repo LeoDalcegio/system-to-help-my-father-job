@@ -24,6 +24,7 @@ import { InventoryMovementsService } from './inventory-movements.service';
 import { UpdateInventoryMovementDto } from './dto/update-inventory-movement.dto';
 import { BalanceInventoryMovementDto } from './dto/balance-inventory-movement.dto';
 import { Query } from '@nestjs/common';
+import { InventoryMovementDto } from './dto/inventory-movement.dto';
 
 @Controller('inventory-movements')
 @ApiTags('inventory-movements')
@@ -31,13 +32,13 @@ export class InventoryMovementsController {
     constructor(private readonly inventoryMovementsService: InventoryMovementsService) {}
 
     @Get()
-    @ApiOkResponse({ type: [InventoryMovementEntity] })
+    @ApiOkResponse({ type: [InventoryMovementDto] })
     @ApiQuery({ name: 'page', required: true })
     @ApiQuery({ name: 'limit', required: true })
     findAll(
         @Query('page', new ParseIntPipe()) page: number,
         @Query('limit', new ParseIntPipe()) limit: number,
-    ): Promise<InventoryMovementEntity[]> {
+    ): Promise<InventoryMovementDto[]> {
         return this.inventoryMovementsService.findAll(page, limit);
     }
 

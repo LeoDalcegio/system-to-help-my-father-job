@@ -7,6 +7,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory } from 'react-router-dom';
 
+import { GetCorrespondentTypeName } from '../../utils/InventoryMovements'
+
 import api from "../../services/api";
 
 import "./styles.css";
@@ -53,6 +55,10 @@ export default function InventoryMovementsList() {
                 page,
                 limit
             },
+        });
+
+        response.data.forEach(function(part, index, theArray) {
+            theArray[index].type = GetCorrespondentTypeName(theArray[index].type)
         });
 
         setInventoryMovements(response.data);

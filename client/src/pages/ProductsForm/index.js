@@ -13,6 +13,8 @@ import EditButton from '../../components/EditButton'
 
 import api from "../../services/api";
 
+import { TYPE, TYPE_NAME } from '../../enums/Products';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -127,8 +129,8 @@ export default function ProductsForm() {
                                 value={type}
                                 onChange={(event) => setType(event.target.value)}
                             >
-                            <MenuItem value={'M'}>Malha</MenuItem>
-                            <MenuItem value={'F'}>Fio</MenuItem>
+                            <MenuItem key={TYPE.MALHA} value={TYPE.MALHA}>{TYPE_NAME.MALHA}</MenuItem>
+                            <MenuItem key={TYPE.FIO} value={TYPE.FIO}>{TYPE_NAME.FIO}</MenuItem>
                         </Select>
                     </FormControl>
 

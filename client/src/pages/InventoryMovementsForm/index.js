@@ -9,12 +9,13 @@ import Select from '@material-ui/core/Select';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import DateFnsUtils from '@date-io/date-fns';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import Grid from '@material-ui/core/Grid';
 
 import AddButton from '../../components/AddButton'
 import BackButton from '../../components/BackButton'
 import EditButton from '../../components/EditButton'
 import NumberFormatCustomQuantity from '../../components/NumberFormatCustomQuantity'
+
+import { TYPE, TYPE_NAME } from '../../enums/InventoryMovements';
 
 import api from "../../services/api";
 
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export default function InventoryMovementsForm() {
     const [product, setProduct] = useState('');
     const [noteNumber, setNoteNumber] = useState(0);
-    const [movementDate, setMovementDate] = useState(Date.UTC);
+    const [movementDate, setMovementDate] = useState(new Date(Date.now()));
     const [quantity, setQuantity] = useState(0);
     const [client, setClient] = useState('');
     const [observation, setObservation] = useState('');
@@ -55,6 +56,7 @@ export default function InventoryMovementsForm() {
     const [products, setProducts] = useState([])
 
     const location = useLocation();
+    
     const id = location?.state?.id;
 
     const history = useHistory();
@@ -86,7 +88,6 @@ export default function InventoryMovementsForm() {
             },
         }).then((response) => {
             setClients(response.data)
-            console.log(response.data)
         });
         
     }, []);
@@ -142,18 +143,23 @@ export default function InventoryMovementsForm() {
             >
                 <div className="inventory-movements-form-inputs">
 
-                    <TextField
-                        id="date"
-                        label="Data"
-                        type="date"      
-                        style={{ margin: 8 }}              
-                        className={classes.textField}
-                        value={movementDate || ''}
-                        onChange={(event) => setMovementDate(event.target.value)}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            className={classes.textField}
+                            margin="normal"
+                            style={{ margin: 8 }}
+                            id="date-picker-inline"
+                            label="Data de movimentação"
+                            value={movementDate}
+                            onChange={(date) => setMovementDate(date)}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
                     
                     <FormControl className={classes.formControl}>
                         <InputLabel>Tipo</InputLabel>
@@ -161,8 +167,8 @@ export default function InventoryMovementsForm() {
                             value={type || ''}
                             onChange={(event) => setType(event.target.value)}
                         >
-                            <MenuItem key={'E'} value={'E'}>Entrada</MenuItem>
-                            <MenuItem key={'X'} value={'X'}>Saída</MenuItem>
+                            <MenuItem key={TYPE.ENTRY} value={TYPE.ENTRY}>{TYPE_NAME.ENTRY}</MenuItem>
+                            <MenuItem key={TYPE.EXIT} value={TYPE.EXIT}>{TYPE_NAME.EXIT}</MenuItem>
                         </Select>
                     </FormControl>
 
@@ -217,7 +223,7 @@ export default function InventoryMovementsForm() {
                             shrink: true,
                         }}
                         InputProps={{
-                            startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
+                            endAdornment: <InputAdornment position="start">Kg</InputAdornment>,
                             inputComponent: NumberFormatCustomQuantity,
                         }}
                     />

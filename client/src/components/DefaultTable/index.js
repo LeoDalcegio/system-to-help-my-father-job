@@ -82,13 +82,13 @@ export default function DefaultTable({ columns, rows, loadData, deleteData, upda
                                     {columns.map((column) => {
                                         const value = row[column.id];                                        
                                         return (
-                                            <TableCell key={column.id} align={column.align}>
+                                            <TableCell key={column.id} align={column.align} type={column.type}>
                                                 {
                                                     column.id === 'actions' 
                                                 ?
                                                     editAndDeleteIcons(row.id)
                                                 :                                                     
-                                                    column.format && typeof value === 'number' ? column.format(value) : value                                                
+                                                    column.format ? column.format(value) : value                                                
                                                 }
                                             </TableCell>                                            
                                         );                                        

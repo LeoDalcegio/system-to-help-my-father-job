@@ -7,7 +7,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory } from 'react-router-dom';
 
-import { GetCorrespondentTypeName } from '../../utils/Products'
+import { GetCorrespondentTypeName } from '../../utils/products'
 
 import api from "../../services/api";
 

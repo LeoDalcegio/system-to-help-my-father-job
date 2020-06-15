@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -14,161 +14,172 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-
-import { GetCorrespondentTypeName } from '../../utils/InventoryMovements';
+import TablePagination from '@material-ui/core/TablePagination';
+import { toDate } from '../../utils/formats'
 
 import api from "../../services/api";
 
 const useRowStyles = makeStyles({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
     },
-  },
 });
 
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      { date: '2020-01-05', customerId: '11091700', amount: 3 },
-      { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
-    ],
-  };
-}
-
 function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-  const classes = useRowStyles();
+    const { row } = props;
+    const [open, setOpen] = useState(false);
+    const classes = useRowStyles();
+    console.log(row)
+    return (
+        <React.Fragment>
+            <TableRow className={classes.root}>
+                <TableCell>
+                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
+                
+                <TableCell align="right">{row.entry.id}</TableCell>
+                <TableCell align="right">{row.entry.noteNumber}</TableCell>
+                <TableCell align="right">{toDate(row.entry.movementDate)}</TableCell>
+                <TableCell align="right">{row.entry.quantity}</TableCell>
+                <TableCell align="left">{row.entry.productCode}</TableCell>
+                <TableCell align="left">{row.entry.productDescription}</TableCell>
+                <TableCell align="left">{row.entry.client}</TableCell>
+                <TableCell align="left">{row.entry.observation}</TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Box margin={1}>
+                            <Typography variant="h6" gutterBottom component="div">
+                                Saídas
+                            </Typography>
+                            <Table size="small" aria-label="entries">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="right">Id</TableCell>
+                                        <TableCell align="right">Número da nota</TableCell>
+                                        <TableCell align="right">Data</TableCell>
+                                        <TableCell align="right">Quantidade</TableCell>
+                                        <TableCell align="left">Código do produto</TableCell>
+                                        <TableCell align="left">Descrição do produto</TableCell>
+                                        <TableCell align="left">Observação</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {row.exits.map((exitsRow) => (
+                                        <TableRow key={exitsRow.id}>
+                                            <TableCell align="right">{exitsRow.id}</TableCell>
+                                            <TableCell align="right">{exitsRow.noteNumber}</TableCell>
+                                            <TableCell align="right">{toDate(exitsRow.movementDate)}</TableCell>
+                                            <TableCell align="right">{exitsRow.quantity}</TableCell>
+                                            <TableCell align="left">{exitsRow.productCode}</TableCell>
+                                            <TableCell align="left">{exitsRow.productDescription}</TableCell>
+                                            <TableCell align="left">{exitsRow.observation}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Box>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
 
-  return (
-    <React.Fragment>
-      <TableRow className={classes.root}>
-        <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
-        </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                History
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
+        </React.Fragment>
+    );
 }
 
 Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
+    row: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        noteNumber: PropTypes.number.isRequired,
+        movementDate: PropTypes.any.isRequired,
+        quantity: PropTypes.number.isRequired,
+        productCode: PropTypes.string.isRequired,
+        productDescription: PropTypes.string.isRequired,
+        client: PropTypes.string.isRequired,
+        observation: PropTypes.string.isRequired,
+        exits: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.number.isRequired,
+                noteNumber: PropTypes.number.isRequired,
+                movementDate: PropTypes.any.isRequired,
+                quantity: PropTypes.number.isRequired,
+                productCode: PropTypes.string.isRequired,
+                productDescription: PropTypes.string.isRequired,
+                observation: PropTypes.string.isRequired,
+            }),
+        ).isRequired,
+    }).isRequired,
 };
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-];
 export default function InventoryMovementsBalance() {
     const [data, setData] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
 
     useEffect(() => {
-        
-        loadBalances();
-    },[]);
+        loadBalances(0, 10);
+    }, []);
+
+    useEffect(() => {
+        loadBalances(page, rowsPerPage);
+    }, [page, rowsPerPage]);
 
     const loadBalances = async (page, limit) => {
         const response = await api.get("/inventory-movements/balance", {
-            params: {                
-                page: 0,
-                limit: 2000
+            params: {
+                page,
+                limit
             },
-        });
-
-        response.data.forEach(function(part, index, theArray) {
-            theArray[index].type = GetCorrespondentTypeName(theArray[index].type)
         });
 
         setData(response.data);
     }
 
-  return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+    return (
+        <TableContainer component={Paper}>
+            <Table aria-label="collapsible table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell />
+                        <TableCell align="right">Id</TableCell>
+                        <TableCell align="right">Número da nota</TableCell>
+                        <TableCell align="right">Data da movimentação</TableCell>
+                        <TableCell align="right">Quantidade</TableCell>
+                        <TableCell align="left">Código do produto</TableCell>
+                        <TableCell align="left">Descrição do produto</TableCell>
+                        <TableCell align="left">Cliente</TableCell>
+                        <TableCell align="left">Observação</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {data.map((row) => (
+                        <Row key={row.name} row={row} />
+                    ))}
+                </TableBody>
+            </Table>
+            <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={-1}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+        </TableContainer>
+    );
 }

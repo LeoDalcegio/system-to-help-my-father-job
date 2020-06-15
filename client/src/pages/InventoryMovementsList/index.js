@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import DefaultTable from "../../components/DefaultTable";
-import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
@@ -8,7 +7,8 @@ import AddIcon from "@material-ui/icons/Add";
 import { useHistory } from 'react-router-dom';
 import ViewListIcon from '@material-ui/icons/ViewList';
 
-import { GetCorrespondentTypeName } from '../../utils/InventoryMovements'
+import { GetCorrespondentTypeName } from '../../utils/inventoryMovements'
+import { toDate } from '../../utils/formats'
 
 import api from "../../services/api";
 
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
     { id: "id", label: "Id",  align: 'right' },
-    { id: "movementDate", label: "Data", align: 'right' },
+    { id: "movementDate", label: "Data", align: 'right', type: 'date', format: toDate },
     { id: "noteNumber", label: "Número da Nota", align: 'right' },
     { id: "type", label: "Tipo", align: 'left' },
     { id: "productCode", label: "Código do Produto", align: 'left' },
@@ -128,7 +128,7 @@ export default function InventoryMovementsList() {
 
                 <Button
                     variant="contained"
-                    color="primary"
+                    color="inherit"
                     className={classes.button} 
                     startIcon={<ViewListIcon />}
                     onClick={() => history.push('/inventory-movements-balance')}

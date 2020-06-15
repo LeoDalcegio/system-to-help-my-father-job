@@ -250,7 +250,7 @@ export default function InventoryMovementsForm() {
                         style={{ margin: 8 }}
                         value={observation || ''}
                         onChange={(event) => setObservation(event.target.value)}
-                        placeholder="Observação do produto"
+                        placeholder="Observação da movimentação de estoque"
                         fullWidth
                         margin="normal"
                         InputLabelProps={{

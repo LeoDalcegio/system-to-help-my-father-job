@@ -11,6 +11,9 @@ export class InventoryMovementDto {
     readonly noteNumber: number;
 
     @ApiProperty()
+    readonly referencedNoteNumber: number;
+
+    @ApiProperty()
     readonly movementDate: Date;
 
     @ApiProperty()
@@ -40,6 +43,7 @@ export class InventoryMovementDto {
     constructor(inventoryMovement: InventoryMovement) {
         this.id = inventoryMovement.id;
         this.noteNumber = inventoryMovement.noteNumber;
+        this.referencedNoteNumber = inventoryMovement.referencedNoteNumber;
         this.movementDate = inventoryMovement.movementDate;
         this.quantity = inventoryMovement.quantity;
         this.type = inventoryMovement.type;

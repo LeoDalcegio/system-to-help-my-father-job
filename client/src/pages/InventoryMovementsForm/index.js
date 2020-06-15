@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export default function InventoryMovementsForm() {
     const [product, setProduct] = useState('');
     const [noteNumber, setNoteNumber] = useState(0);
+    const [referencedNoteNumber, setReferencedNoteNumber] = useState(0);
     const [movementDate, setMovementDate] = useState(new Date(Date.now()));
     const [quantity, setQuantity] = useState(0);
     const [client, setClient] = useState('');
@@ -66,10 +67,11 @@ export default function InventoryMovementsForm() {
     useEffect(() => {
         if(id > 0){
             api.get(`/inventory-movements/${id}`).then(response => {
-                const {  observation, type, noteNumber, movementDate, quantity, client, product } = response.data;
+                const {  observation, type, referencedNoteNumber, noteNumber, movementDate, quantity, client, product } = response.data;
 
                 setObservation(type);
                 setNoteNumber(noteNumber);
+                setReferencedNoteNumber(referencedNoteNumber);
                 setQuantity(quantity);
                 setClient(client.id);
                 setProduct(product.id);
@@ -109,9 +111,10 @@ export default function InventoryMovementsForm() {
         const token = localStorage.getItem('token');
         
         const data = {
-            productId: product,
-            clientId: client,
-            noteNumber,
+            productId: Number(product),
+            clientId: Number(client),
+            noteNumber: Number(noteNumber),
+            referencedNoteNumber: Number(referencedNoteNumber),
             movementDate,
             quantity,
             observation,
@@ -179,6 +182,20 @@ export default function InventoryMovementsForm() {
                         type="number"
                         value={noteNumber || ''}
                         onChange={(event) => setNoteNumber(parseInt(event.target.value))}
+                        margin="normal"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+
+                    <TextField
+                        label="Número da nota referenciada"
+                        style={{ margin: 8 }}
+                        placeholder="Número da nota fiscal referenciada"
+                        type="number"
+                        value={referencedNoteNumber || ''}
+                        onChange={(event) => setReferencedNoteNumber(parseInt(event.target.value))}
                         margin="normal"
                         className={classes.textField}
                         InputLabelProps={{

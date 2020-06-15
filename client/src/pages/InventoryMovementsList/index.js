@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory } from 'react-router-dom';
+import ViewListIcon from '@material-ui/icons/ViewList';
 
 import { GetCorrespondentTypeName } from '../../utils/InventoryMovements'
 
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         marginTop: theme.spacing(1),
-    }
+    },
 }));
 
 const columns = [
@@ -109,18 +110,32 @@ export default function InventoryMovementsList() {
                         Buscar
                     </Button>
                 </div>
+                
             </form>
 
             <DefaultTable columns={columns} rows={inventoryMovements} loadData={loadInventoryMovements} deleteData={deleteData} updateData={updateData}/>
-            <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                startIcon={<AddIcon />}
-                onClick={() => history.push('/inventory-movements-form')}
-            >
-                Incluir
-            </Button>
+            
+            <div className="bottom-buttons">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<AddIcon />}
+                    onClick={() => history.push('/inventory-movements-form')}
+                >
+                    Incluir
+                </Button>
+
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button} 
+                    startIcon={<ViewListIcon />}
+                    onClick={() => history.push('/inventory-movements-balance')}
+                >
+                    Consultar Saldos
+                </Button>
+            </div>
         </div>
     );
 }

@@ -32,7 +32,7 @@ export class ClientsController {
     @Get()
     @ApiQuery({ name: 'page', required: true })
     @ApiQuery({ name: 'limit', required: true })
-    @ApiQuery({ name: 'name', required: true })
+    @ApiQuery({ name: 'name', required: false })
     @ApiOkResponse({ type: [ClientEntity] })
     findAll(
         @Query('page', new ParseIntPipe()) page: number,

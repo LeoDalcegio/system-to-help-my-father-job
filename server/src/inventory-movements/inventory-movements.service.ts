@@ -26,10 +26,9 @@ export class InventoryMovementsService {
         const inventoryMovements: InventoryMovement[] = await this.inventoryMovementsRepository.findAll({
             include: [Product, Client],
             order: ['id'],
-            limit: limit,
-            offset: page,
+            limit,
+            offset: (limit * page) - limit,
         });
-
 
         return inventoryMovements.map(inventoryMovement => new InventoryMovementDto(inventoryMovement));
     }
@@ -57,14 +56,16 @@ export class InventoryMovementsService {
     ): Promise<BalanceInventoryMovementDto[]> {
         const retObject: BalanceInventoryMovementDto[] = [];
 
+        page++;
+
         const entries: InventoryMovement[] = await this.inventoryMovementsRepository.findAll({
             include: [Product, Client],
             where: {
                 type: InventoryMovementType.ENTRY
             },
             order: ['id'],
-            limit: limit,
-            offset: page,
+            limit,
+            offset: (limit * page) - limit,
         });
 
         for(const entry of entries){
@@ -73,13 +74,15 @@ export class InventoryMovementsService {
                 where: {
                     type: InventoryMovementType.EXIT,
                     clientId: entry.clientId,
-                    noteNumber: entry.noteNumber
+                    referencedNoteNumber: entry.noteNumber
                 }
             });
 
+            const entryToSend = new InventoryMovementDto(entry);
+
             retObject.push({
-                entry,
-                exits: [...exits]
+                entry: entryToSend,
+                exits: [...exits.map(inventoryMovement => new InventoryMovementDto(inventoryMovement))]
             })
         }
 
@@ -93,6 +96,7 @@ export class InventoryMovementsService {
         inventoryMovement.clientId = createInventoryMovementDto.clientId;
         inventoryMovement.movementDate = createInventoryMovementDto.movementDate;
         inventoryMovement.noteNumber = createInventoryMovementDto.noteNumber;
+        inventoryMovement.referencedNoteNumber = createInventoryMovementDto.referencedNoteNumber;
         inventoryMovement.productId = createInventoryMovementDto.productId;
         inventoryMovement.quantity = createInventoryMovementDto.quantity;
         inventoryMovement.type = createInventoryMovementDto.type;
@@ -110,6 +114,7 @@ export class InventoryMovementsService {
         inventoryMovement.clientId = updateInventoryMovementDto.clientId;
         inventoryMovement.movementDate = updateInventoryMovementDto.movementDate;
         inventoryMovement.noteNumber = updateInventoryMovementDto.noteNumber;
+        inventoryMovement.referencedNoteNumber = updateInventoryMovementDto.referencedNoteNumber;
         inventoryMovement.observation = updateInventoryMovementDto.observation;
         inventoryMovement.productId = updateInventoryMovementDto.productId;
         inventoryMovement.quantity = updateInventoryMovementDto.quantity;
@@ -126,7 +131,7 @@ export class InventoryMovementsService {
 
     async delete(id: number) {
         const inventoryMovement = await this.inventoryMovementsRepository.findByPk<InventoryMovement>(id);
-
+        
         await inventoryMovement.destroy();
 
         return inventoryMovement;

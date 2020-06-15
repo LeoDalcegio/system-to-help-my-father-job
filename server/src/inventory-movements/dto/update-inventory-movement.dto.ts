@@ -8,6 +8,11 @@ export class UpdateInventoryMovementDto {
     readonly noteNumber: number;
 
     @ApiProperty()
+    @IsNumber()
+    @IsOptional()
+    readonly referencedNoteNumber: number;
+
+    @ApiProperty()
     readonly movementDate: Date;
 
     @ApiProperty()

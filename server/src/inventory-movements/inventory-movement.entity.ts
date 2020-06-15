@@ -30,6 +30,10 @@ export class InventoryMovement extends Model<InventoryMovement> {
     @ApiProperty()
     noteNumber: number;
 
+    @Column({ field: 'referenced_note_number' })
+    @ApiProperty()
+    referencedNoteNumber: number;
+
     @Column({ field: 'movement_date' })
     @ApiProperty()
     movementDate: Date;

@@ -1,5 +1,7 @@
 .inventory-movements-list-search {
     margin-bottom: 10px;
+    align-items: baseline;
+    display: flex;
 }
 
 .bottom-buttons {

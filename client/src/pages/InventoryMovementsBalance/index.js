@@ -25,13 +25,18 @@ const useRowStyles = makeStyles({
             borderBottom: 'unset',
         },
     },
+    childTotal: {
+        fontWeight: "bold"
+    }
 });
 
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = useState(false);
     const classes = useRowStyles();
-    console.log(row)
+
+    let totalQuantityByEntry = 0;
+
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
@@ -70,8 +75,11 @@ function Row(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.exits.map((exitsRow) => (
-                                        <TableRow key={exitsRow.id}>
+                                    {row.exits.map((exitsRow) => {
+                                        totalQuantityByEntry += Number(exitsRow.quantity);
+
+                                        return (
+                                            <TableRow key={exitsRow.id}>
                                             <TableCell align="right">{exitsRow.id}</TableCell>
                                             <TableCell align="right">{exitsRow.noteNumber}</TableCell>
                                             <TableCell align="right">{toDate(exitsRow.movementDate)}</TableCell>
@@ -79,15 +87,22 @@ function Row(props) {
                                             <TableCell align="left">{exitsRow.productCode}</TableCell>
                                             <TableCell align="left">{exitsRow.productDescription}</TableCell>
                                             <TableCell align="left">{exitsRow.observation}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                            </TableRow>                                    
+                                        )
+                                    })}
+                                    <TableRow>
+                                        <TableCell className={classes.childTotal} align="left">Saldo total: </TableCell>
+                                        <TableCell className={classes.childTotal} align="right" />
+                                        <TableCell className={classes.childTotal} align="right" />
+                                        <TableCell className={classes.childTotal} align="right">{row.entry.quantity - totalQuantityByEntry}</TableCell>
+                                        <TableCell className={classes.childTotal} align="right" />
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </Box>
                     </Collapse>
                 </TableCell>
             </TableRow>
-
         </React.Fragment>
     );
 }
@@ -104,15 +119,15 @@ Row.propTypes = {
         observation: PropTypes.string.isRequired,
         exits: PropTypes.arrayOf(
             PropTypes.shape({
-                id: PropTypes.number.isRequired,
-                noteNumber: PropTypes.number.isRequired,
-                movementDate: PropTypes.any.isRequired,
-                quantity: PropTypes.number.isRequired,
-                productCode: PropTypes.string.isRequired,
-                productDescription: PropTypes.string.isRequired,
-                observation: PropTypes.string.isRequired,
+                id: PropTypes.number,
+                noteNumber: PropTypes.number,
+                movementDate: PropTypes.any,
+                quantity: PropTypes.number,
+                productCode: PropTypes.string,
+                productDescription: PropTypes.string,
+                observation: PropTypes.string,
             }),
-        ).isRequired,
+        ),
     }).isRequired,
 };
 

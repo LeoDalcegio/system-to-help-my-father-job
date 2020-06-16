@@ -6,6 +6,10 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory } from 'react-router-dom';
 import ViewListIcon from '@material-ui/icons/ViewList';
+import ClientsSelect from '../../components/ClientsSelect'
+import TextField from "@material-ui/core/TextField";
+import ProductsSelect from '../../components/ProductsSelect'
+import InventoryMovementTypeSelect from '../../components/InventoryMovementTypeSelect'
 
 import { GetCorrespondentTypeName } from '../../utils/inventoryMovements'
 import { toDate } from '../../utils/formats'
@@ -45,6 +49,11 @@ const columns = [
 
 export default function InventoryMovementsList() {
     const [inventoryMovements, setInventoryMovements] = useState([])
+    const [productId, setProductId] = useState(0);
+    const [clientId, setClientId] = useState(0);
+    const [noteNumber, setNoteNumber] = useState('');
+    const [referencedNoteNumber, setReferencedNoteNumber] = useState('');
+    const [type, setType] = useState('');
 
     const history = useHistory();
 
@@ -54,7 +63,12 @@ export default function InventoryMovementsList() {
         const response = await api.get("/inventory-movements", {
             params: {                
                 page,
-                limit
+                limit,
+                clientId: Number(clientId),
+                productId: Number(productId),
+                noteNumber: Number(noteNumber),
+                referencedNoteNumber: Number(referencedNoteNumber),
+                type
             },
         });
 
@@ -100,7 +114,32 @@ export default function InventoryMovementsList() {
                 autoComplete="off"
                 onSubmit={handleSubmit}
             >
-                <div className="inventory-movements-list-search">                    
+                <div className="inventory-movements-list-search">  
+                    <TextField
+                        id="outlined-search"
+                        label="Número da nota..."
+                        type="search"
+                        variant="outlined"
+                        value={noteNumber}
+                        onChange={(event) => setNoteNumber(event.target.value)}
+                        size="small"
+                    />   
+
+                    <TextField
+                        id="outlined-search"
+                        label="Nota referenciada..."
+                        type="search"
+                        variant="outlined"
+                        value={referencedNoteNumber}
+                        onChange={(event) => setReferencedNoteNumber(event.target.value)}
+                        size="small"
+                    />  
+
+                    <InventoryMovementTypeSelect value={type} setType={setType} createEmptyField={true} />
+
+                    <ClientsSelect value={clientId} setClient={setClientId} createEmptyField={true} />
+                    <ProductsSelect value={productId} setProduct={setProductId} createEmptyField={true}/>   
+                    
                     <Button
                         variant="contained"
                         color="primary"

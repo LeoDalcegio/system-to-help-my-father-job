@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import DateFnsUtils from '@date-io/date-fns';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -13,9 +9,10 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import AddButton from '../../components/AddButton'
 import BackButton from '../../components/BackButton'
 import EditButton from '../../components/EditButton'
+import ClientsSelect from '../../components/ClientsSelect'
+import ProductsSelect from '../../components/ProductsSelect'
+import InventoryMovementTypeSelect from '../../components/InventoryMovementTypeSelect'
 import NumberFormatCustomQuantity from '../../components/NumberFormatCustomQuantity'
-
-import { TYPE, TYPE_NAME } from '../../enums/InventoryMovements';
 
 import api from "../../services/api";
 
@@ -40,8 +37,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
-
 export default function InventoryMovementsForm() {
     const [product, setProduct] = useState('');
     const [noteNumber, setNoteNumber] = useState(0);
@@ -51,10 +46,6 @@ export default function InventoryMovementsForm() {
     const [client, setClient] = useState('');
     const [observation, setObservation] = useState('');
     const [type, setType] = useState('');
-
-    const [clients, setClients] = useState([]);
-
-    const [products, setProducts] = useState([])
 
     const location = useLocation();
     
@@ -82,29 +73,6 @@ export default function InventoryMovementsForm() {
         }
     }, [id]);
 
-    useEffect(() => {
-        api.get("/clients", {
-            params: {
-                page: 0,
-                limit: 9999999
-            },
-        }).then((response) => {
-            setClients(response.data)
-        });
-        
-    }, []);
-
-    useEffect(() => {
-        api.get("/products", {
-            params: {
-                page: 0,
-                limit: 9999999
-            },
-        }).then((response) => {
-            setProducts(response.data)
-        });
-    }, [])
-    
     const handleSubmit = async (e) => {
         e.preventDefault(); 
         
@@ -164,16 +132,7 @@ export default function InventoryMovementsForm() {
                         />
                     </MuiPickersUtilsProvider>
                     
-                    <FormControl className={classes.formControl}>
-                        <InputLabel>Tipo</InputLabel>
-                        <Select
-                            value={type || ''}
-                            onChange={(event) => setType(event.target.value)}
-                        >
-                            <MenuItem key={TYPE.ENTRY} value={TYPE.ENTRY}>{TYPE_NAME.ENTRY}</MenuItem>
-                            <MenuItem key={TYPE.EXIT} value={TYPE.EXIT}>{TYPE_NAME.EXIT}</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <InventoryMovementTypeSelect value={type} setType={setType}/>
 
                     <TextField
                         label="Número da nota"
@@ -203,30 +162,8 @@ export default function InventoryMovementsForm() {
                         }}
                     />
 
-                    <FormControl className={classes.formControl}>
-                        <InputLabel>Cliente</InputLabel>
-                        <Select
-                                value={client || ''}
-                                onChange={(event) => setClient(parseInt(event.target.value))}
-                        >
-                            {clients.map((client) => (
-                                <MenuItem key={client.id} value={client.id}>{client.id} - {client.name}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    
-
-                    <FormControl className={classes.formControl}>
-                        <InputLabel>Produto</InputLabel>
-                        <Select
-                                value={product || ''}
-                                onChange={(event) => setProduct(parseInt(event.target.value))}
-                        >
-                            {products.map((product) => (
-                                <MenuItem key={product.id} value={product.id}>{product.productCode} - {product.productDescription}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <ClientsSelect value={client} setClient={setClient}/>
+                    <ProductsSelect value={product} setProduct={setProduct}/>                   
 
                     <TextField
                         label="Quantidade"

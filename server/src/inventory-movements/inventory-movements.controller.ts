@@ -35,11 +35,21 @@ export class InventoryMovementsController {
     @ApiOkResponse({ type: [InventoryMovementDto] })
     @ApiQuery({ name: 'page', required: true })
     @ApiQuery({ name: 'limit', required: true })
+    @ApiQuery({ name: 'productId', required: false })
+    @ApiQuery({ name: 'clientId', required: false })
+    @ApiQuery({ name: 'noteNumber', required: false })
+    @ApiQuery({ name: 'referencedNoteNumber', required: false })
+    @ApiQuery({ name: 'type', required: false })
     findAll(
         @Query('page', new ParseIntPipe()) page: number,
         @Query('limit', new ParseIntPipe()) limit: number,
+        @Query('clientId', new ParseIntPipe()) clientId?: number,
+        @Query('productId', new ParseIntPipe()) productId?: number,
+        @Query('noteNumber', new ParseIntPipe()) noteNumber?: number,
+        @Query('referencedNoteNumber', new ParseIntPipe()) referencedNoteNumber?: number,
+        @Query('type') type?: string,
     ): Promise<InventoryMovementDto[]> {
-        return this.inventoryMovementsService.findAll(page, limit);
+        return this.inventoryMovementsService.findAll(page, limit, productId, clientId, noteNumber, referencedNoteNumber, type);
     }
 
     @Get('balance')

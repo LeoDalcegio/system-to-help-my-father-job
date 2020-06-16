@@ -18,13 +18,40 @@ export class InventoryMovementsService {
     async findAll(
         page: number,
         limit: number = 15,
+        productId?: number, 
+        clientId?: number, 
+        noteNumber?: number, 
+        referencedNoteNumber?: number, 
+        type?: string
     ) {
         let where = { };
+
+        if (productId) {
+            where['productId'] = productId
+        }
+
+        if (clientId) {
+            where['clientId'] = clientId
+        }
+
+        if (noteNumber) {
+            where['noteNumber'] = noteNumber
+        }
+
+        if (referencedNoteNumber) {
+            where['referencedNoteNumber'] = referencedNoteNumber
+        }
+
+        if (type) {
+            where['type'] = type
+        }
+
 
         page++;
 
         const inventoryMovements: InventoryMovement[] = await this.inventoryMovementsRepository.findAll({
             include: [Product, Client],
+            where,
             order: ['id'],
             limit,
             offset: (limit * page) - limit,
@@ -53,16 +80,38 @@ export class InventoryMovementsService {
     async balance(
         page: number,
         limit: number = 15,
+        productId?: number, 
+        clientId?: number, 
+        noteNumber?: number, 
+        referencedNoteNumber?: number, 
     ): Promise<BalanceInventoryMovementDto[]> {
         const retObject: BalanceInventoryMovementDto[] = [];
 
         page++;
 
+        let where = { 
+            type: InventoryMovementType.ENTRY 
+        };
+
+        if (productId) {
+            where['productId'] = productId
+        }
+
+        if (clientId) {
+            where['clientId'] = clientId
+        }
+
+        if (noteNumber) {
+            where['noteNumber'] = noteNumber
+        }
+
+        if (referencedNoteNumber) {
+            where['referencedNoteNumber'] = referencedNoteNumber
+        }
+
         const entries: InventoryMovement[] = await this.inventoryMovementsRepository.findAll({
             include: [Product, Client],
-            where: {
-                type: InventoryMovementType.ENTRY
-            },
+            where,
             order: ['id'],
             limit,
             offset: (limit * page) - limit,

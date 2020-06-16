@@ -9,8 +9,6 @@ import { useHistory } from 'react-router-dom';
 
 import api from "../../services/api";
 
-import "./styles.css";
-
 const useStyles = makeStyles((theme) => ({
     root: {
         "& .MuiTextField-root, .MuiButton-root": {
@@ -20,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         marginTop: theme.spacing(1),
+    },
+    searchForm: {
+        marginBottom: 10
     }
 }));
 
@@ -90,7 +91,7 @@ export default function ClientsList() {
                 autoComplete="off"
                 onSubmit={handleSubmit}
             >
-                <div className="clients-list-search">
+                <div className={classes.searchForm}>
                     <TextField
                         id="outlined-search"
                         label="Nome do cliente..."

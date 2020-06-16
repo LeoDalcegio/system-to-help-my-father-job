@@ -11,8 +11,6 @@ import { GetCorrespondentTypeName } from '../../utils/products'
 
 import api from "../../services/api";
 
-import "./styles.css";
-
 const useStyles = makeStyles((theme) => ({
     root: {
         "& .MuiTextField-root, .MuiButton-root": {
@@ -22,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         marginTop: theme.spacing(1),
+    },
+    searchForm: {
+        marginBottom: 10
     }
 }));
 
@@ -108,7 +109,7 @@ export default function ProductsList() {
                 autoComplete="off"
                 onSubmit={handleSubmit}
             >
-                <div className="products-list-search">
+                <div className={classes.searchForm}>
                     <TextField
                         id="outlined-search"
                         label="Código do produto..."

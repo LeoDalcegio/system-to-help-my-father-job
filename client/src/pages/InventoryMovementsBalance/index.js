@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
+import Button from "@material-ui/core/Button";
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import SearchIcon from "@material-ui/icons/Search";
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -15,7 +16,11 @@ import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import TablePagination from '@material-ui/core/TablePagination';
+import { makeStyles } from "@material-ui/core/styles";
 import { toDate } from '../../utils/formats'
+import ClientsSelect from '../../components/ClientsSelect'
+import TextField from "@material-ui/core/TextField";
+import ProductsSelect from '../../components/ProductsSelect'
 
 import api from "../../services/api";
 
@@ -29,6 +34,23 @@ const useRowStyles = makeStyles({
         fontWeight: "bold"
     }
 });
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        "& .MuiTextField-root, .MuiButton-root": {
+            marginBottom: theme.spacing(1),
+            marginRight: theme.spacing(1),
+        },
+    },
+    button: {
+        marginTop: theme.spacing(1),
+    },
+    searchForm: {
+        marginBottom: 10,
+        alignItems: 'baseline',
+        display: 'flex',
+    }
+}));
 
 function Row(props) {
     const { row } = props;
@@ -135,6 +157,12 @@ export default function InventoryMovementsBalance() {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [productId, setProductId] = useState(0);
+    const [clientId, setClientId] = useState(0);
+    const [noteNumber, setNoteNumber] = useState('');
+    const [referencedNoteNumber, setReferencedNoteNumber] = useState('');
+
+    const classes = useStyles();
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -144,6 +172,13 @@ export default function InventoryMovementsBalance() {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        await loadBalances(0, 10);
+    }
+
 
     useEffect(() => {
         loadBalances(0, 10);
@@ -157,7 +192,11 @@ export default function InventoryMovementsBalance() {
         const response = await api.get("/inventory-movements/balance", {
             params: {
                 page,
-                limit
+                limit,
+                clientId: Number(clientId),
+                productId: Number(productId),
+                noteNumber: Number(noteNumber),
+                referencedNoteNumber: Number(referencedNoteNumber),
             },
         });
 
@@ -165,36 +204,79 @@ export default function InventoryMovementsBalance() {
     }
 
     return (
-        <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell />
-                        <TableCell align="right">Id</TableCell>
-                        <TableCell align="right">Número da nota</TableCell>
-                        <TableCell align="right">Data da movimentação</TableCell>
-                        <TableCell align="right">Quantidade</TableCell>
-                        <TableCell align="left">Código do produto</TableCell>
-                        <TableCell align="left">Descrição do produto</TableCell>
-                        <TableCell align="left">Cliente</TableCell>
-                        <TableCell align="left">Observação</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data.map((row) => (
-                        <Row key={row.name} row={row} />
-                    ))}
-                </TableBody>
-            </Table>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={-1}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
-        </TableContainer>
+        <React.Fragment>
+            <form 
+                className={classes.root}
+                noValidate 
+                autoComplete="off"
+                onSubmit={handleSubmit}
+            >
+                <div className={classes.searchForm}>  
+                    <TextField
+                        id="outlined-search"
+                        label="Número da nota..."
+                        type="search"
+                        variant="outlined"
+                        value={noteNumber}
+                        onChange={(event) => setNoteNumber(event.target.value)}
+                        size="small"
+                    />   
+
+                    <TextField
+                        id="outlined-search"
+                        label="Nota referenciada..."
+                        type="search"
+                        variant="outlined"
+                        value={referencedNoteNumber}
+                        onChange={(event) => setReferencedNoteNumber(event.target.value)}
+                        size="small"
+                    />  
+
+                    <ClientsSelect value={clientId} setClient={setClientId} createEmptyField={true} />
+                    <ProductsSelect value={productId} setProduct={setProductId} createEmptyField={true}/>  
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<SearchIcon />}
+                        type="submit"
+                    >
+                        Buscar
+                    </Button> 
+                </div>
+            </form>
+
+            <TableContainer component={Paper}>
+                <Table aria-label="collapsible table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell />
+                            <TableCell align="right">Id</TableCell>
+                            <TableCell align="right">Número da nota</TableCell>
+                            <TableCell align="right">Data da movimentação</TableCell>
+                            <TableCell align="right">Quantidade</TableCell>
+                            <TableCell align="left">Código do produto</TableCell>
+                            <TableCell align="left">Descrição do produto</TableCell>
+                            <TableCell align="left">Cliente</TableCell>
+                            <TableCell align="left">Observação</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.map((row) => (
+                            <Row key={row.name} row={row} />
+                        ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={-1}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </TableContainer>
+        </React.Fragment>
     );
 }

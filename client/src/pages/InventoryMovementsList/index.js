@@ -16,8 +16,6 @@ import { toDate } from '../../utils/formats'
 
 import api from "../../services/api";
 
-import "./styles.css";
-
 const useStyles = makeStyles((theme) => ({
     root: {
         "& .MuiTextField-root, .MuiButton-root": {
@@ -28,6 +26,15 @@ const useStyles = makeStyles((theme) => ({
     button: {
         marginTop: theme.spacing(1),
     },
+    searchForm: {
+        marginBottom: 10,
+        alignItems: 'baseline',
+        display: 'flex',
+    },
+    bottomButtons: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    }
 }));
 
 const columns = [
@@ -114,7 +121,7 @@ export default function InventoryMovementsList() {
                 autoComplete="off"
                 onSubmit={handleSubmit}
             >
-                <div className="inventory-movements-list-search">  
+                <div className={classes.searchForm}>  
                     <TextField
                         id="outlined-search"
                         label="Número da nota..."
@@ -149,12 +156,11 @@ export default function InventoryMovementsList() {
                         Buscar
                     </Button>
                 </div>
-                
             </form>
 
             <DefaultTable columns={columns} rows={inventoryMovements} loadData={loadInventoryMovements} deleteData={deleteData} updateData={updateData}/>
             
-            <div className="bottom-buttons">
+            <div className={classes.bottomButtons}>
                 <Button
                     variant="contained"
                     color="primary"

@@ -6,6 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import CustomSnackbar from '../../components/CustomSnackbar'
 
 import AddButton from '../../components/AddButton'
 import BackButton from '../../components/BackButton'
@@ -41,6 +42,7 @@ export default function ProductsForm() {
     const [productDescription, setProductDescription] = useState('');
     const [observation, setObservation] = useState('');
     const [type, setType] = useState('');
+    const [snackbarState, setSnackbarState] = useState(false);
 
     const location = useLocation();
     const id = location?.state?.id;
@@ -80,13 +82,21 @@ export default function ProductsForm() {
             }
         }
 
-        if(id > 0){
-            await api.put(`/products/${id}`, data, header);
-        }else{
-            await api.post('/products', data, header);
+        try {
+            if(id > 0){
+                await api.put(`/products/${id}`, data, header);
+            }else{
+                await api.post('/products', data, header);
+            }
+
+            history.push('/products-list')
+        }catch(error) {
+            setSnackbarState({
+                open: true,
+                message: `Erro ao ${id > 0 ? 'atualizar' : 'incluir'} o registro. Erro original: ${error}`,
+                severity: "error",
+            });
         }
-        
-        history.push('/products-list')
     }
 
     return (
@@ -156,6 +166,8 @@ export default function ProductsForm() {
                     <BackButton className={classes.button} onClick={() => history.push('/products-list')}/>
                 </div>
             </form>
+
+            <CustomSnackbar  snackbarState={snackbarState} />
         </div>
     );
 }

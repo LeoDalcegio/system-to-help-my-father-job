@@ -56,6 +56,13 @@ export class UsersController {
         return this.usersService.getUser(request.user.id);
     }
 
+    @Get('verify-login')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    async verifyLogin() {
+        
+    }
+
     @Put('me')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))

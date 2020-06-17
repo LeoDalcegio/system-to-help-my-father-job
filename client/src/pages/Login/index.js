@@ -1,32 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { useHistory } from 'react-router-dom';
-
+import CustomSnackbar from '../../components/CustomSnackbar'
 import './styles.css';
 
 export default function Login() {    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [snackbarState, setSnackbarState] = useState(false);
 
     const history = useHistory();
+
+    useEffect(() => {
+        if(localStorage.getItem('token')){
+            history.push('/inventory-movements-list')
+        }
+    }, [])
 
     async function handleSubmit(e){
         e.preventDefault();
 
         if(!email || !password){
-            alert('Informe um email e senha');
-        }else{
-            const response = await api.post('/users/login', {
-                email,
-                password
+            setSnackbarState({
+                open: true,
+                message: 'Informe um usuário e senha',
+                severity: "error",
             });
+        }else{
+            try {
+                const response = await api.post('/users/login', {
+                    email,
+                    password
+                });
 
-            const { token } = response.data;
+                const { token } = response.data;
 
-            localStorage.setItem('email', email);
-            localStorage.setItem('token', token);
+                localStorage.setItem('email', email);
+                localStorage.setItem('token', token);
 
-            history.push('/products-list')
+                history.push('/inventory-movements-list')
+            }catch(error) {
+                setSnackbarState({
+                    open: true,
+                    message: 'Erro ao realizar o login',
+                    severity: "error"
+                });
+            }            
         }
     }
 
@@ -52,7 +71,9 @@ export default function Login() {
                 id="password"
             />
 
-            <button className="login-button" type="submit">Entrar</button>                    
+            <button className="login-button" type="submit">Entrar</button>  
+
+            <CustomSnackbar  snackbarState={snackbarState} />
         </form>
     )
 }

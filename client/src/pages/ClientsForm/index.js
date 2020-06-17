@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import AddButton from '../../components/AddButton'
 import BackButton from '../../components/BackButton'
 import EditButton from '../../components/EditButton'
+import CustomSnackbar from '../../components/CustomSnackbar'
 
 import api from "../../services/api";
 
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ClientsForm() {
     const [name, setName] = useState('');
     const [observation, setObservation] = useState('');
+    const [snackbarState, setSnackbarState] = useState(false);
 
     const location = useLocation();
     const id = location?.state?.id;
@@ -68,13 +70,21 @@ export default function ClientsForm() {
             }
         }
 
-        if(id > 0){
-            await api.put(`/clients/${id}`, data, header);
-        }else{
-            await api.post('/clients', data, header);
+        try {
+            if(id > 0){
+                await api.put(`/clients/${id}`, data, header);
+            }else{
+                await api.post('/clients', data, header);
+            }
+            
+            history.push('/clients-list')
+        }catch(error) {
+            setSnackbarState({
+                open: true,
+                message: `Erro ao ${id > 0 ? 'atualizar' : 'incluir'} o registro. Erro original: ${error}`,
+                severity: "error",
+            });
         }
-        
-        history.push('/clients-list')
     }
 
     return (

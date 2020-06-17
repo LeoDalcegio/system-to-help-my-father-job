@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import DateFnsUtils from '@date-io/date-fns';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import CustomSnackbar from '../../components/CustomSnackbar'
 
 import AddButton from '../../components/AddButton'
 import BackButton from '../../components/BackButton'
@@ -46,6 +47,7 @@ export default function InventoryMovementsForm() {
     const [client, setClient] = useState('');
     const [observation, setObservation] = useState('');
     const [type, setType] = useState('');
+    const [snackbarState, setSnackbarState] = useState(false);
 
     const location = useLocation();
     
@@ -95,13 +97,21 @@ export default function InventoryMovementsForm() {
             }
         }
 
-        if(id > 0){
-            await api.put(`/inventory-movements/${id}`, data, header);
-        }else{
-            await api.post('/inventory-movements', data, header);
+        try{            
+            if(id > 0){
+                await api.put(`/inventory-movements/${id}`, data, header);
+            }else{
+                await api.post('/inventory-movements', data, header);
+            }
+            
+            history.push('/inventory-movements-list')
+        }catch(error) {
+            setSnackbarState({
+                open: true,
+                message: `Erro ao ${id > 0 ? 'atualizar' : 'incluir'} o registro. Erro original: ${error}`,
+                severity: "error",
+            });
         }
-        
-        history.push('/inventory-movements-list')
     }
 
     return (

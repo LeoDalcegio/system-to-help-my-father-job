@@ -17,6 +17,9 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import TablePagination from '@material-ui/core/TablePagination';
 import { makeStyles } from "@material-ui/core/styles";
+import DateFnsUtils from '@date-io/date-fns';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+
 import { toDate } from '../../utils/formats'
 import ClientsSelect from '../../components/ClientsSelect'
 import TextField from "@material-ui/core/TextField";
@@ -48,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
     searchForm: {
         marginBottom: 10,
         alignItems: 'baseline',
+        flexFlow: 'wrap',
         display: 'flex',
     }
 }));
@@ -68,7 +72,6 @@ function Row(props) {
                     </IconButton>
                 </TableCell>
                 
-                <TableCell align="right">{row.entry.id}</TableCell>
                 <TableCell align="right">{row.entry.noteNumber}</TableCell>
                 <TableCell align="right">{toDate(row.entry.movementDate)}</TableCell>
                 <TableCell align="right">{row.entry.quantity}</TableCell>
@@ -87,7 +90,6 @@ function Row(props) {
                             <Table size="small" aria-label="entries">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell align="right">Id</TableCell>
                                         <TableCell align="right">Número da nota</TableCell>
                                         <TableCell align="right">Data</TableCell>
                                         <TableCell align="right">Quantidade</TableCell>
@@ -102,7 +104,6 @@ function Row(props) {
 
                                         return (
                                             <TableRow key={exitsRow.id}>
-                                            <TableCell align="right">{exitsRow.id}</TableCell>
                                             <TableCell align="right">{exitsRow.noteNumber}</TableCell>
                                             <TableCell align="right">{toDate(exitsRow.movementDate)}</TableCell>
                                             <TableCell align="right">{exitsRow.quantity}</TableCell>
@@ -114,8 +115,7 @@ function Row(props) {
                                     })}
                                     <TableRow>
                                         <TableCell className={classes.childTotal} align="left">Saldo total: </TableCell>
-                                        <TableCell className={classes.childTotal} align="right" />
-                                        <TableCell className={classes.childTotal} align="right" />
+                                        <TableCell className={classes.childTotal} align="right" />                                        
                                         <TableCell className={classes.childTotal} align="right">{row.entry.quantity - totalQuantityByEntry}</TableCell>
                                         <TableCell className={classes.childTotal} align="right" />
                                     </TableRow>
@@ -131,7 +131,6 @@ function Row(props) {
 
 Row.propTypes = {
     row: PropTypes.shape({
-        id: PropTypes.number.isRequired,
         noteNumber: PropTypes.number.isRequired,
         movementDate: PropTypes.any.isRequired,
         quantity: PropTypes.number.isRequired,
@@ -141,7 +140,6 @@ Row.propTypes = {
         observation: PropTypes.string.isRequired,
         exits: PropTypes.arrayOf(
             PropTypes.shape({
-                id: PropTypes.number,
                 noteNumber: PropTypes.number,
                 movementDate: PropTypes.any,
                 quantity: PropTypes.number,
@@ -161,7 +159,9 @@ export default function InventoryMovementsBalance() {
     const [clientId, setClientId] = useState(0);
     const [noteNumber, setNoteNumber] = useState('');
     const [referencedNoteNumber, setReferencedNoteNumber] = useState('');
-
+    const [initialMovementDate, setInitialMovementDate] = useState(null);
+    const [finalMovementDate, setFinalMovementDate] = useState(null);
+    
     const classes = useStyles();
 
     const handleChangePage = (event, newPage) => {
@@ -179,15 +179,6 @@ export default function InventoryMovementsBalance() {
         await loadBalances(0, 10);
     }
 
-
-    useEffect(() => {
-        loadBalances(0, 10);
-    }, []);
-
-    useEffect(() => {
-        loadBalances(page, rowsPerPage);
-    }, [page, rowsPerPage]);
-
     const loadBalances = async (page, limit) => {
         const response = await api.get("/inventory-movements/balance", {
             params: {
@@ -203,6 +194,10 @@ export default function InventoryMovementsBalance() {
         setData(response.data);
     }
 
+    useEffect(() => {
+        loadBalances(page, rowsPerPage);
+    }, [page, rowsPerPage]);
+
     return (
         <React.Fragment>
             <form 
@@ -212,6 +207,40 @@ export default function InventoryMovementsBalance() {
                 onSubmit={handleSubmit}
             >
                 <div className={classes.searchForm}>  
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            className={classes.textField}
+                            margin="normal"
+                            style={{ margin: 8 }}
+                            id="date-picker-inline"
+                            label="Data inicial"
+                            value={initialMovementDate}
+                            onChange={(date) => setInitialMovementDate(date)}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            className={classes.textField}
+                            margin="normal"
+                            style={{ margin: 8 }}
+                            id="date-picker-inline"
+                            label="Data inicial"
+                            value={finalMovementDate}
+                            onChange={(date) => setFinalMovementDate(date)}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+                    
                     <TextField
                         id="outlined-search"
                         label="Número da nota..."
@@ -251,7 +280,6 @@ export default function InventoryMovementsBalance() {
                     <TableHead>
                         <TableRow>
                             <TableCell />
-                            <TableCell align="right">Id</TableCell>
                             <TableCell align="right">Número da nota</TableCell>
                             <TableCell align="right">Data da movimentação</TableCell>
                             <TableCell align="right">Quantidade</TableCell>

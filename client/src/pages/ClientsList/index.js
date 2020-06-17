@@ -113,6 +113,7 @@ export default function ClientsList() {
             </form>
 
             <DefaultTable columns={columns} rows={clients} loadData={loadClients} deleteData={deleteData} updateData={updateData}/>
+            
             <Button
                 variant="contained"
                 color="primary"

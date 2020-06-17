@@ -40,6 +40,8 @@ export class InventoryMovementsController {
     @ApiQuery({ name: 'noteNumber', required: false })
     @ApiQuery({ name: 'referencedNoteNumber', required: false })
     @ApiQuery({ name: 'type', required: false })
+    @ApiQuery({ name: 'initialMovementDate', required: false })
+    @ApiQuery({ name: 'finalMovementDate', required: false })
     findAll(
         @Query('page', new ParseIntPipe()) page: number,
         @Query('limit', new ParseIntPipe()) limit: number,
@@ -48,8 +50,11 @@ export class InventoryMovementsController {
         @Query('noteNumber', new ParseIntPipe()) noteNumber?: number,
         @Query('referencedNoteNumber', new ParseIntPipe()) referencedNoteNumber?: number,
         @Query('type') type?: string,
+        @Query('initialMovementDate') initialMovementDate?: Date,
+        @Query('finalMovementDate') finalMovementDate?: Date,
     ): Promise<InventoryMovementDto[]> {
-        return this.inventoryMovementsService.findAll(page, limit, productId, clientId, noteNumber, referencedNoteNumber, type);
+        
+        return this.inventoryMovementsService.findAll(page, limit, productId, clientId, noteNumber, referencedNoteNumber, type, initialMovementDate, finalMovementDate);
     }
 
     @Get('balance')

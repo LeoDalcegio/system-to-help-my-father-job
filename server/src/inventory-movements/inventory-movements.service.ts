@@ -22,7 +22,9 @@ export class InventoryMovementsService {
         clientId?: number, 
         noteNumber?: number, 
         referencedNoteNumber?: number, 
-        type?: string
+        type?: string,
+        initialMovementDate?: Date, 
+        finalMovementDate?: Date
     ) {
         let where = { };
 
@@ -45,7 +47,14 @@ export class InventoryMovementsService {
         if (type) {
             where['type'] = type
         }
+        console.log(initialMovementDate)
+        if (initialMovementDate) {
+            where['movementDate'] >= initialMovementDate
+        }
 
+        if (finalMovementDate) {
+            where['movementDate'] <= finalMovementDate
+        }
 
         page++;
 
@@ -56,7 +65,7 @@ export class InventoryMovementsService {
             limit,
             offset: (limit * page) - limit,
         });
-
+        
         return inventoryMovements.map(inventoryMovement => new InventoryMovementDto(inventoryMovement));
     }
 

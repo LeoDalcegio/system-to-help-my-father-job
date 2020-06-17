@@ -6,11 +6,13 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory } from 'react-router-dom';
 import ViewListIcon from '@material-ui/icons/ViewList';
-import ClientsSelect from '../../components/ClientsSelect'
 import TextField from "@material-ui/core/TextField";
+import DateFnsUtils from '@date-io/date-fns';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+
+import ClientsSelect from '../../components/ClientsSelect'
 import ProductsSelect from '../../components/ProductsSelect'
 import InventoryMovementTypeSelect from '../../components/InventoryMovementTypeSelect'
-
 import { GetCorrespondentTypeName } from '../../utils/inventoryMovements'
 import { toDate } from '../../utils/formats'
 
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 10,
         alignItems: 'baseline',
         display: 'flex',
+        flexFlow: 'wrap'
     },
     bottomButtons: {
         display: 'flex',
@@ -38,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-    { id: "id", label: "Id",  align: 'right' },
     { id: "movementDate", label: "Data", align: 'right', type: 'date', format: toDate },
     { id: "noteNumber", label: "Número da Nota", align: 'right' },
     { id: "type", label: "Tipo", align: 'left' },
@@ -46,11 +48,6 @@ const columns = [
     { id: "productDescription", label: "Descrição do Produto", align: 'left' },
     { id: "client", label: "Cliente",  align: 'left' },
     { id: "quantity", label: "Quantidade", align: 'right' },
-    {
-        id: "observation",
-        label: "Observação",
-        align: 'left'
-    },
     { id: "actions", label: "Ações", align: 'right'},
 ];
 
@@ -59,6 +56,8 @@ export default function InventoryMovementsList() {
     const [productId, setProductId] = useState(0);
     const [clientId, setClientId] = useState(0);
     const [noteNumber, setNoteNumber] = useState('');
+    const [initialMovementDate, setInitialMovementDate] = useState(null);
+    const [finalMovementDate, setFinalMovementDate] = useState(null);
     const [referencedNoteNumber, setReferencedNoteNumber] = useState('');
     const [type, setType] = useState('');
 
@@ -75,7 +74,9 @@ export default function InventoryMovementsList() {
                 productId: Number(productId),
                 noteNumber: Number(noteNumber),
                 referencedNoteNumber: Number(referencedNoteNumber),
-                type
+                type,
+                initialMovementDate: new Date(initialMovementDate),
+                finalMovementDate: new Date(finalMovementDate)
             },
         });
 
@@ -122,6 +123,40 @@ export default function InventoryMovementsList() {
                 onSubmit={handleSubmit}
             >
                 <div className={classes.searchForm}>  
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            className={classes.textField}
+                            margin="normal"
+                            style={{ margin: 8 }}
+                            id="date-picker-inline"
+                            label="Data inicial"
+                            value={initialMovementDate}
+                            onChange={(date) => setInitialMovementDate(date)}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            className={classes.textField}
+                            margin="normal"
+                            style={{ margin: 8 }}
+                            id="date-picker-inline"
+                            label="Data final"
+                            value={finalMovementDate}
+                            onChange={(date) => setFinalMovementDate(date)}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+
                     <TextField
                         id="outlined-search"
                         label="Número da nota..."

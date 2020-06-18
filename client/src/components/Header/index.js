@@ -19,7 +19,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import BusinessIcon from '@material-ui/icons/Business';
 import DescriptionIcon from '@material-ui/icons/Description';
 import BuildIcon from '@material-ui/icons/Build';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     appBarShift: {
-        marginLeft: drawerWidth,
+        marginLeft: drawerWidth,        
         width: `calc(100% - ${drawerWidth}px)`,
         transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
@@ -86,6 +86,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header({ children }) {
+    const history = useHistory();
+
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -97,6 +99,13 @@ export default function Header({ children }) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const handleogout = () => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('email')
+
+        history.push('/');
+    }
 
     return (
         <div className={classes.root}>
@@ -121,8 +130,11 @@ export default function Header({ children }) {
                     </IconButton>
                     <Typography variant="h6" noWrap>
                         Tecelagem
-          </Typography>
-                </Toolbar>
+                    </Typography>
+                    <Typography onClick={handleogout} variant="h6" noWrap style={{marginLeft: "50em", cursor: "pointer"}}>
+                        Sair
+                    </Typography>
+                </Toolbar>                
             </AppBar>
             <Drawer
                 variant="permanent"

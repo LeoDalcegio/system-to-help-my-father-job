@@ -47,7 +47,7 @@ export class InventoryMovementsService {
         if (type) {
             where['type'] = type
         }
-        console.log(initialMovementDate)
+
         if (initialMovementDate) {
             where['movementDate'] >= initialMovementDate
         }

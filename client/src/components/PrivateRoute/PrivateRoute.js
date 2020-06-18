@@ -3,33 +3,34 @@ import { Redirect, Route } from 'react-router-dom'
 import HttpStatus from 'http-status-codes';
 import api from '../../services/api'
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRoute = ({ Component, ...rest }) => {
 
     let isLoggedIn = false;
     
-    const token = localStorage.getItem('token');
-
-    if(token){
+    async function checkIfLoged() {
         api.get('/users/me', {
             headers: {
-                authorization: token
+                authorization: localStorage.getItem('token')
             }
         }).then(response => {
-            if(response.status !== HttpStatus.UNAUTHORIZED){
+            if(response.status != HttpStatus.UNAUTHORIZED){
                 isLoggedIn = true;
+            }else{
+                localStorage.removeItem('token')
             }
         });
     }
-
+    
     return (
         <Route
             {...rest}
-            render={props =>
-                isLoggedIn ? (
-                    <Component {...props} />
-                ) : (
-                        <Redirect to={{ pathname: '/', state: { from: props.location } }} />
-                    )
+            render={props =>  (
+                    checkIfLoged ? (
+                        <Component {...props} />
+                    ) : (
+                            <Redirect to={{ pathname: '/', state: { from: props.location } }} />
+                        )
+                )
             }
         />
     )

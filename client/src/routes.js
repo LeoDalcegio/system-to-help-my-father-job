@@ -19,13 +19,13 @@ export default function Routes() {
                 <Route exact path='/' exact component={Login}/>
             
                 <Header>
-                    <PrivateRoute path='/products-list' component={ProductsList}/>
-                    <PrivateRoute path='/products-form' component={ProductsForm}/>
-                    <PrivateRoute path='/clients-list' component={ClientsList}/>
-                    <PrivateRoute path='/clients-form' component={ClientsForm}/>
-                    <PrivateRoute path='/inventory-movements-list' component={InventoryMovementsList}/>
-                    <PrivateRoute path='/inventory-movements-form' component={InventoryMovementsForm}/>                    
-                    <PrivateRoute path='/inventory-movements-balance' component={InventoryMovementsBalance}/>                    
+                    <PrivateRoute path='/products-list' Component={ProductsList}/>
+                    <PrivateRoute path='/products-form' Component={ProductsForm}/>
+                    <PrivateRoute path='/clients-list' Component={ClientsList}/>
+                    <PrivateRoute path='/clients-form' Component={ClientsForm}/>
+                    <PrivateRoute path='/inventory-movements-list' Component={InventoryMovementsList}/>
+                    <PrivateRoute path='/inventory-movements-form' Component={InventoryMovementsForm}/>                    
+                    <PrivateRoute path='/inventory-movements-balance' Component={InventoryMovementsBalance}/>                    
                 </Header>
             </Switch>
         </BrowserRouter>

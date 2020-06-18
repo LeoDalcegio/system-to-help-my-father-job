@@ -37,7 +37,12 @@ const useStyles = makeStyles((theme) => ({
     bottomButtons: {
         display: 'flex',
         justifyContent: 'space-between'
-    }
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: '25ch',
+    },
 }));
 
 const columns = [

@@ -38,7 +38,9 @@ export default function Login() {
                 localStorage.setItem('email', email);
                 localStorage.setItem('token', token);
 
-                history.push('/inventory-movements-list')
+                setTimeout(() => { 
+                    history.push('/inventory-movements-list')
+                }, 500);
             }catch(error) {
                 setSnackbarState({
                     open: true,
